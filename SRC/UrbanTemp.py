@@ -9,16 +9,26 @@ import geopandas as gpd
 from rasterstats import zonal_stats
 from rasterio import features
 import os
-from ftplib import FTP
 import xarray as xr
 import fnmatch
-import re
+
+# from ftplib import FTP
+# import re
 
 # Directories 
+
+# LOCAL
 CHIRT_DIR = '/Users/cascade/Github/PopRaster/data/raw/CHIRT/' # <<--- path to loop through
 SHP_DIR = '/Users/cascade/Github/PopRaster/data/raw/JRC/ghs-ucdb/'
 POLY_RST_DIR = '/Users/cascade/Github/PopRaster/data/interim/'
 DATA_OUT = '/Users/cascade/Github/PopRaster/data/interim/'
+
+# TANA
+# CHIRT_DIR = '//home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
+# SHP_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/raw/GHS_UCDB/'
+# POLY_RST_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/interim/'
+# DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/processed/'
+
 
 # Open Polygon Raster
 polyRst_fn = 'GHS_UCDB_Raster_Raster_touched.tif'
@@ -29,7 +39,8 @@ shp_fn = 'GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp'
 shps = gpd.read_file(SHP_DIR+shp_fn)
 
 # Set fn out, change as needed 
-fn_out = 'GHS-CHIRTS-Poly-Loop-Test.shp' 
+shp_fn_out = 'GHS-CHIRTS-MONTHLY.shp' 
+csv_fn_out = 'GHS-CHIRTS-MONTHLY.csv' 
 
 # Isloate SHP Poly Col to merge back in later 
 df_ghs = gpd.GeoDataFrame()
@@ -84,9 +95,7 @@ for fn in os.listdir(CHIRT_DIR):
         
         print(len(avg_ID))
         print(len(avg_temp))
-        
-        ###### CHECK W/ 1983.01 POLYGONS have so few Avgs could be with the ds_mask! ! ! ! !
-        
+                
         # turn chirt max and IDS into a DF
         df_avg = pd.DataFrame()
         df_avg[date] = avg_temp
@@ -96,4 +105,7 @@ for fn in os.listdir(CHIRT_DIR):
         df_merge = df_merge.merge(df_avg, on='ID_HDC_G0', how = 'outer')
 
 # Write out as a .shp file
-df_merge.to_file(DATA_OUT+fn_out)
+df_merge.to_file(DATA_OUT+shp_fn_out)
+df_merge.to_csv(DATA_OUT+csv_fn_out)
+
+print('DONE ! ! !')
