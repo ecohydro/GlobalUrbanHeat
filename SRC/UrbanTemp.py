@@ -18,16 +18,16 @@ import fnmatch
 # Directories 
 
 # LOCAL
-CHIRT_DIR = '/Users/cascade/Github/PopRaster/data/raw/CHIRT/' # <<--- path to loop through
-SHP_DIR = '/Users/cascade/Github/PopRaster/data/raw/JRC/ghs-ucdb/'
-POLY_RST_DIR = '/Users/cascade/Github/PopRaster/data/interim/'
-DATA_OUT = '/Users/cascade/Github/PopRaster/data/interim/'
+# CHIRT_DIR = '/Users/cascade/Github/PopRaster/data/raw/CHIRT/' # <<--- path to loop through
+# SHP_DIR = '/Users/cascade/Github/PopRaster/data/raw/JRC/ghs-ucdb/'
+# POLY_RST_DIR = '/Users/cascade/Github/PopRaster/data/interim/'
+# DATA_OUT = '/Users/cascade/Github/PopRaster/data/interim/'
 
 # TANA
-# CHIRT_DIR = '//home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
-# SHP_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/raw/GHS_UCDB/'
-# POLY_RST_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/interim/'
-# DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/processed/'
+CHIRT_DIR = '/home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
+SHP_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/raw/GHS_UCDB/'
+POLY_RST_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/interim/'
+DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/processed/'
 
 
 # Open Polygon Raster
