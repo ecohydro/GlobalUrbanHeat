@@ -25,6 +25,7 @@ import fnmatch
 
 # TANA
 CHIRT_DIR = '/home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
+# CHIRT_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/test/' # <<--- TEST
 SHP_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/raw/GHS_UCDB/'
 POLY_RST_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/interim/'
 DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/processed/'
@@ -104,8 +105,7 @@ for fn in os.listdir(CHIRT_DIR):
         # merge the df
         df_merge = df_merge.merge(df_avg, on='ID_HDC_G0', how = 'outer')
 
-# Write out as a .shp file
-df_merge.to_file(DATA_OUT+shp_fn_out)
-df_merge.to_csv(DATA_OUT+csv_fn_out)
+        df_merge.to_file(DATA_OUT+shp_fn_out)
+        df_merge.to_csv(DATA_OUT+csv_fn_out)
 
 print('DONE ! ! !')
