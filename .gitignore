@@ -114,3 +114,7 @@ venv.bak/
 
 # Ignore file types that may be too big for git
 *.tif
+
+# Other Stuff
+*.swp
+*.out
