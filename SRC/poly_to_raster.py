@@ -1,7 +1,6 @@
 import rasterio
 from rasterio import features
 
-
 def poly_to_raster (rst, polys, value, touched, out_fn, fill_value):
     """Function makes a raster from a list of polygons
     
