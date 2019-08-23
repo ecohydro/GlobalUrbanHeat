@@ -24,7 +24,7 @@ import fnmatch
 # DATA_OUT = '/Users/cascade/Github/PopRaster/data/interim/'
 
 # TANA
-CHIRT_DIR = '/home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
+CHIRT_DIR = '/home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # google page 417 of the aa big book
 SHP_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/raw/GHS_UCDB/'
 POLY_RST_DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/interim/'
 DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/Data/processed/'
@@ -39,7 +39,7 @@ shp_fn = 'GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp'
 shps = gpd.read_file(SHP_DIR+shp_fn)
 
 # Set fn out, change as needed 
-shp_fn_out = 'GHS-CHIRT-MONTHLY.shp' 
+shp_fn_out = 'GHS-CHIRT-MONTHLY.shp' # << ---- CHECK THESE BEFORE RUNNING!!!
 csv_fn_out = 'GHS-CHIRT-MONTHLY.csv' 
 
 # Isloate SHP Poly Col to merge back in later 
@@ -62,10 +62,8 @@ for fn in os.listdir(CHIRT_DIR):
     # find all the tif files
     if fn.endswith('.tif'):
         
-        # NEED TO BUILD META DATA CHECK INTO ROUTINE and throw an error<<<<---------
-
         # Get the date of each chirt file
-        date = (fn.split('CHIRTSmax.')[1].split('.tif')[0])
+        date = (fn.split('CHIRTmax.')[1].split('.tif')[0]) # <<<< ------ CHECK
         print(date)
         
         # Open CHIRT Data and turn data into array
@@ -104,8 +102,8 @@ for fn in os.listdir(CHIRT_DIR):
         # merge the df
         df_merge = df_merge.merge(df_avg, on='ID_HDC_G0', how = 'outer')
 
-# Write out as a .shp file
-df_merge.to_file(DATA_OUT+shp_fn_out)
-df_merge.to_csv(DATA_OUT+csv_fn_out)
+        # Write out as a .shp/.csv file
+        df_merge.to_file(DATA_OUT+shp_fn_out)
+        df_merge.to_csv(DATA_OUT+csv_fn_out)
 
 print('DONE ! ! !')
