@@ -134,9 +134,6 @@ for dirpath, dirnames, files in os.walk(CHIRT_DIR):
         # df_merge.to_file(DATA_OUT+fn_out+'_'+dir_year+'.shp') # shp out
         df_merge.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
 
-
-
-
 # Write out as a .shp file
 # df_merge.to_file(DATA_OUT+shp_fn_out)
 # df_merge.to_csv(DATA_OUT+csv_fn_out)
