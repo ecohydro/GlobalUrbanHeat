@@ -111,6 +111,7 @@ venv.bak/
 
 # exclude data from source control by default
 /Data/
+/data/
 
 # Ignore file types that may be too big for git
 *.tif
