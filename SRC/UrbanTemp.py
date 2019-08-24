@@ -26,10 +26,10 @@ start = time.time()
 # DATA_OUT = '/Users/cascade/Github/PopRaster/data/interim/'
 
 # LOCAL TEST 
-CHIRT_DIR = '/Users/cascade/Github/UrbanHeat/data/test_data/' # <<--- path to loop through
+CHIRT_DIR = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
 SHP_DIR = '/Users/cascade/Github/PopRaster/data/raw/JRC/ghs-ucdb/'
 POLY_RST_DIR = '/Users/cascade/Github/PopRaster/data/interim/'
-DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_data/test_out/'
+DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
 
 # TANA
 # CHIRT_DIR = '/home/cascade/tana-spin-cascade/projects/CHIRTMax_Monthly/' # <<--- path to loop through
