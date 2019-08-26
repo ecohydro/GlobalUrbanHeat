@@ -19,11 +19,16 @@ from multiprocessing import Pool
 
 
 # LOCAL Test
-DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
-DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
-DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
+# DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
+# DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
+# DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
 
+# TANA Test
+DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/'
 
+DATA_IN = DIR+'data/test_in/'
+DATA_OUT = DIR+'data/test_out/'
+DATA_INTERIM = DIR+'data/interim/'
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -122,4 +127,6 @@ dir_list= glob(DATA_IN+'*/')
 dir_list
 
 # Execute code
-parallel_loop(temp_ghs, dir_list, 3)
+print('STARTING LOOP')
+parallel_loop(temp_ghs, dir_list, mp.cpu_count())
+print('ENDING LOOP')
