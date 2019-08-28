@@ -24,11 +24,16 @@ from multiprocessing import Pool
 # DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
 
 # TANA Test
-DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/'
+# DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/'
+# DATA_IN = DIR+'data/test_in/'
+# DATA_OUT = DIR+'data/test_out/'
+# DATA_INTERIM = DIR+'data/interim/'
 
-DATA_IN = DIR+'data/test_in/'
-DATA_OUT = DIR+'data/test_out/'
-DATA_INTERIM = DIR+'data/interim/'
+# TANA FIRE
+DATA_IN = '/home/cascade/tana-spin-cascade/projects/UrbanTempData/CHTSMax_Monthly/' # <<--- path to loop through
+DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/processed/'
+DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/'
+
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -59,10 +64,8 @@ def temp_ghs(dir_nm):
         # find all the tif files
         if fn.endswith('.tif'):
 
-            # NEED TO BUILD META DATA CHECK INTO ROUTINE and throw an error<<<<---------
-
             # Get the date of each chirt file
-            date = (fn.split('CHIRTSmax.')[1].split('.tif')[0])
+            date = (fn.split('CHTSmax.')[1].split('.tif')[0]) #<<<< ------ Always update! 
             print(dir_year)
             print(date)
 
@@ -102,7 +105,7 @@ def temp_ghs(dir_nm):
             # merge the df
             ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer') #<<<<----- NEED TO FIX THIS
 
-    ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'test.csv') # csv out
+    ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
     print('DONE ! ! !')
 
 # start pools
