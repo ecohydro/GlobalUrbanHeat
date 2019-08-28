@@ -18,9 +18,9 @@ from glob import glob
 from multiprocessing import Pool
 
 # LOCAL Test
-# DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
-# DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
-# DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
+DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
+DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
+DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
 
 # TANA Test
 # DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/'
@@ -34,9 +34,9 @@ from multiprocessing import Pool
 # DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/'
 
 # TONG FIRE
-DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/'
-DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
-DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
+# DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/'
+# DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
+# DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -68,7 +68,7 @@ def temp_ghs(dir_nm):
         if fn.endswith('.tif'):
 
             # Get the date of each chirt file
-            date = (fn.split('CHIRTSmax.')[1].split('.tif')[0]) #<<<< ------ Always update! 
+            date = (fn.split('TMax.')[1].split('.tif')[0]) #<<<< ------ Always update! 
             print(dir_year)
             print(date)
 
