@@ -2,6 +2,14 @@
 # Designed to run through a file list in parallel 
 # By Cascade Tuholske 2019-08-20
 
+####################
+# 
+#   BEFORE RUNNING
+#   CHECK ALL FILE 
+#   NAMES AND PATHS
+#
+####################
+
 # Dependencies
 import rasterio 
 import numpy as np
@@ -22,21 +30,20 @@ from multiprocessing import Pool
 #DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
 #DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
 
-# TANA Test
-# DIR = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/'
-# DATA_IN = DIR+'data/test_in/'
-# DATA_OUT = DIR+'data/test_out/'
-# DATA_INTERIM = DIR+'data/interim/'
-
 # TANA FIRE
 # DATA_IN = '/home/cascade/tana-spin-cascade/projects/UrbanTempData/CHTSMax_Monthly/' # <<--- path to loop through
 # DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/processed/'
 # DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/'
 
-# TONG FIRE
-DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/'
-DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
+# TONG TEST
+DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
+DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
+
+# # TONG FIRE
+# DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/' # <<--- path to loop through
+# DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
+# DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -53,7 +60,7 @@ def temp_ghs(dir_nm):
     polyRst = rasterio.open(DATA_INTERIM+polyRst_fn)
 
     # Set fn out, change as needed 
-    fn_out = 'GHS-CHIRT-MONTHLY'  
+    fn_out = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
     
     # Turn polyRst data as Xarray, 
     polyRst_da = xr.DataArray(polyRst.read(1), dims = ['y', 'x'])
@@ -68,7 +75,7 @@ def temp_ghs(dir_nm):
         if fn.endswith('.tif'):
 
             # Get the date of each chirt file
-            date = (fn.split('Tmax.')[1].split('.tif')[0]) #<<<< ------ Always update! 
+            date = (fn.split('CHIRTSmax.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
             print(dir_year)
             print(date)
 
