@@ -36,7 +36,7 @@ from multiprocessing import Pool
 # TONG FIRE
 DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/'
 DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
-DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
+DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -130,7 +130,6 @@ def parallel_loop(function, dir_list, cpu_num):
 
 # Get dir list
 dir_list= sorted(glob(DATA_IN+'*/'))
-print(dir_list)
 
 # set number of cores to use
 cpu_num = 20 
