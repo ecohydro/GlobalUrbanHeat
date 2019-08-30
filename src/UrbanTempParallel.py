@@ -72,7 +72,7 @@ def temp_ghs(dir_nm):
         dir_year = dir_nm.split(DATA_IN)[1].split('/')[0]
 
         # find all the tif files
-        if fn.endswith('.tif'):
+        if fn.startswith('Tmax'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
 
             # Get the date of each chirt file
             date = (fn.split('Tmax.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
