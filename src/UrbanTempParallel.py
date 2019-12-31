@@ -1,14 +1,16 @@
-# Program finds the TMax from CHIRTSMax Data and a raster with polygon IDS burned
-# Designed to run through a file list in parallel 
+# Program finds the areal averaged TMax from CHIRTSMax Data and a raster with polygon IDS burned
+# Designed to run through a file list in parallel for a dir structured by year
+# 
 # By Cascade Tuholske 2019-08-20
 
-####################
+########################################
 # 
+#   HEY <<<<<<<<<<< -------- HEY LOOK HERE! 
 #   BEFORE RUNNING
 #   CHECK ALL FILE 
 #   NAMES AND PATHS
 #
-####################
+########################################
 
 # Dependencies
 import rasterio 
