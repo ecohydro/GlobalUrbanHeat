@@ -282,7 +282,8 @@ def stats_loop(dir_in, dir_out, fn_out, time_dim, space_dim, Tthresh):
 
 # Dirs and FN Names 
 dir_in = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-DAILY/' # output from avg temp
-DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # ghs ID list
+# DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # ghs ID list
+DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/' # GHS ID LIST TANA
 dir_out = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
 fn_out = 'CHIRTS-GHS-Events-Stats'
 time_dim = 'date'
