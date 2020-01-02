@@ -319,37 +319,21 @@ df_events = df_copy.copy()
 for event in jan_ids:
     df_events = df_events[df_events['Event_ID'] != event]
 
-# Dec   
+# Dec
 for event in dec_ids:
     df_events = df_events[df_events['Event_ID'] != event]
 
 print(len(df_events))
 
-# Add in new events with new event ids
-
-# Merge 
+# Merge -- add new event IDs
 df_events = df_events.drop(columns=['Unnamed: 0'])
 df_events.head()
 
 print(len(df_events))
 print(len(df_overlap_copy_merge))
+
 print(df_events.columns)
-print(df_overlap_merge.columns)
-
-# Make 'x' event ids for final df
-df_overlap_copy_merge['Event_ID'] = df_out_copy_merge['Event_ID_x']
-
-# drop event x y event ID cols 
-df_overlap_copy_merge = df_out_copy_merge = df_out_copy_merge.drop(columns = ['Event_ID_x','Event_ID_y'])
-                                
-print(df_overlap_copy_merge.head(1))
-                                
-print(len(df_events))
-print(len(df_overlap_copy_merge))
-
-df_final = pd.concat([df_events, df_overlap_copy_merge], sort = True)
-
-print(len(df_final))
+print(df_overlap_copy_merge.columns)
 
 #### 6. Save it ##################################################################################
 
