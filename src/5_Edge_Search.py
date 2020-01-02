@@ -251,6 +251,9 @@ print(df_overlap.head(1))
 
 # Get List of Years and Cities for the dec-jan overlap and then find them in the dataset
 
+# Make a copy
+df_copy = df.copy()
+
 # Start with year_x
 years_x = list(df_overlap['year_x'])
 id_x = list(df_overlap['ID_HDC_G0'])
@@ -274,9 +277,6 @@ for i in zip(years_y, id_y, total_days_y):
 
 for y in y_list:
     print(y)
-
-# Make a copy as back up in case you over right df_copy
-df_copy_extra = df_copy.copy()
 
 #### 4. Add Meta data back ##################################################################################
 
