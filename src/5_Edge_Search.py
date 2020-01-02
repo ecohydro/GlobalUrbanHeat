@@ -14,6 +14,8 @@
 #
 #   Moved to .py file from .ipynb on 2019.12.31 by Cascade Tuholske
 #
+#   This is janky code, but should work. Don't judge...
+#
 #   NOTE UPDATE FILE NAME AS NEEDED
 #
 ##################################################################################
@@ -244,9 +246,9 @@ print(df_overlap.head(1))
 # Get List of Years and Cities for the dec-jan overlap and then find them in the dataset
 
 # Start with year_x
-years_x = list(df_out['year_x'])
-id_x = list(df_out['ID_HDC_G0'])
-total_days_x = list(df_out['total_days_x'])
+years_x = list(df_overlap['year_x'])
+id_x = list(df_overlap['ID_HDC_G0'])
+total_days_x = list(df_overlap['total_days_x'])
 
 x_list = []
 for i in zip(years_x,id_x, total_days_x):
@@ -255,22 +257,10 @@ for i in zip(years_x,id_x, total_days_x):
 for x in x_list:
     print(x)
 
-# Search df for i list and replace days
-# this is super slow but it works
-
-df_copy = df.copy()
-
-for x in x_list:
-    for i, row in df_copy.iterrows():
-        if (row['year'] == x[0]) & (row['ID_HDC_G0'] == x[1]):
-            print(df_copy.loc[i,'total_days'])
-            df_copy.loc[i,'total_days'] = x[2]
-            print(df_copy.loc[i,'total_days'])
-
 # Start with year_y 
-years_y = list(df_out['year_y'])
-id_y = list(df_out['ID_HDC_G0'])
-total_days_y = list(df_out['total_days_y'])
+years_y = list(df_overlap['year_y'])
+id_y = list(df_overlap['ID_HDC_G0'])
+total_days_y = list(df_overlap['total_days_y'])
 
 y_list = []
 for i in zip(years_y, id_y, total_days_y):
@@ -279,40 +269,36 @@ for i in zip(years_y, id_y, total_days_y):
 for y in y_list:
     print(y)
 
-# Run on y_list
-for y in y_list:
-    for i, row in df_copy.iterrows():
-        if (row['year'] == y[0]) & (row['ID_HDC_G0'] == y[1]):
-            print(df_copy.loc[i,'total_days'])
-            df_copy.loc[i,'total_days'] = y[2]
-            print(df_copy.loc[i,'total_days'])
-
-#### 4. Add Meta data back ##################################################################################
-
 # Make a copy as back up in case you over right df_copy
 df_copy_extra = df_copy.copy()
+
+#### 4. Add Meta data back ##################################################################################
 
 # copy df_out overlap, df_out is the overlap dataframe
 df_overlap_copy = df_overlap.copy()
 
-print(df_overlap_copy.head(1))
-
 # Get Columns to merge
-cols_to_use = df.columns.difference(df_out_copy.columns) # find missing columns
+cols_to_use = df.columns.difference(df_overlap_copy.columns) # find missing columns
 cols_list = list(cols_to_use) # list
 cols_list.append('ID_HDC_G0') # add IDS
 df_cols = df_copy[cols_list]
 
 # Drop duplicates
 df_cols = df_cols.drop_duplicates('ID_HDC_G0', keep = 'first')
-df_out_copy_merge = df_out_copy.merge(df_cols, on = 'ID_HDC_G0', how = 'inner')
+
+# Merge
+df_overlap_copy_merge = df_overlap_copy.merge(df_cols, on = 'ID_HDC_G0', how = 'inner')                    
+print(df_overlap_copy_merge.columns)
 
 # drop and rename columns
-df_out_copy_merge = df_out_copy_merge.drop(columns = ['Unnamed: 0', 'Unnamed: 0.1'])
-df_out_copy.rename(columns = {'year_x':'year'}, inplace = True) 
-df_out_copy.rename(columns = {'total_days_x':'total_days'}, inplace = True) 
+df_overlap_copy_merge = df_overlap_copy_merge.drop(columns = ['Unnamed: 0'])
+df_overlap_copy.rename(columns = {'year_x':'year'}, inplace = True) 
+df_overlap_copy.rename(columns = {'total_days_x':'total_days'}, inplace = True) 
+
+print(df_overlap_copy.columns)                                
 
 #### 5. Drop overlapped years and add in new DF ##################################################################################
+
 print(overlap.head(1))
 
 # Get events
@@ -327,35 +313,34 @@ df_events = df_copy.copy()
 for event in jan_ids:
     df_events = df_events[df_events['Event_ID'] != event]
 
+# Dec   
 for event in dec_ids:
     df_events = df_events[df_events['Event_ID'] != event]
 
 print(len(df_events))
 
-# Merge
-df_events = df_events.drop(columns=['Unnamed: 0', 'Unnamed: 0.1'])
+# Add in new events with new event ids
+
+# Merge 
+df_events = df_events.drop(columns=['Unnamed: 0'])
 df_events.head()
 
 print(len(df_events))
-print(len(df_out_copy_merge))
-
+print(len(df_overlap_copy_merge))
 print(df_events.columns)
-print(df_out_copy_merge.columns)
+print(df_overlap_merge.columns)
 
 # Make 'x' event ids for final df
-df_out_copy_merge['Event_ID'] = df_out_copy_merge['Event_ID_x']
+df_overlap_copy_merge['Event_ID'] = df_out_copy_merge['Event_ID_x']
 
 # drop event x y event ID cols 
-df_out_copy_merge = df_out_copy_merge = df_out_copy_merge.drop(columns = ['Event_ID_x','Event_ID_y'])
-
+df_overlap_copy_merge = df_out_copy_merge = df_out_copy_merge.drop(columns = ['Event_ID_x','Event_ID_y'])
+                                
+print(df_overlap_copy_merge.head(1))
+                                
 print(len(df_events))
-print(len(df_out_copy_merge))
+print(len(df_overlap_copy_merge))
 
-df_final = pd.concat([df_events, df_out_copy_merge], sort = True)
+df_final = pd.concat([df_events, df_overlap_copy_merge], sort = True)
 
 print(len(df_final))
-
-# Save it out
-
-FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20191231.csv" 
-df_final.to_csv(FN_OUT)
