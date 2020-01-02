@@ -108,22 +108,28 @@ overlap
 
 #### 2. Make new data from overlaps ##################################################################################
 def string_hunt(string_list, out_list, dtype):
-    """Helper function to pull tmax record strings from a list without , and turn them into ints"""
+    """Helper function to pull tmax record strings from a list of Tmaxs, and turn dates into ints"""
     for i in string_list: # set the strings from X list
         if len(i) > 1:
             if '[' in i:
+                
                 record = i[1:]
+                
                 if ']' in record:
+                    
                     record =  record[:-1]
                     out_list.append(dtype(record))
                 else:
                     out_list.append(dtype(record))
+            
             elif ']' in i:
                 record = i[:-1]
-                out_list.append(dtype(record)
+                out_list.append(dtype(record))
+            
             else:
                 record = i
                 out_list.append(dtype(record))
+    
     return out_list
 
 # loop by row to get temps
@@ -344,3 +350,10 @@ print(len(df_overlap_copy_merge))
 df_final = pd.concat([df_events, df_overlap_copy_merge], sort = True)
 
 print(len(df_final))
+
+#### 6. Save it ##################################################################################
+
+# Save it out
+
+# FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20193112.csv"  # Note: Need ?dl=1 to make sure this file gets read correctly
+# df_final.to_csv(FN_OUT)s
