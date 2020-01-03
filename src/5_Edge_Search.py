@@ -6,15 +6,15 @@
 #   Fix to resolve problem TBD.
 #
 #   By Cascade Tuholske, 2019-10-19
-#   
+#
 #   Preliminary Findings
 #   - In the entire record, there are 97 events that start on Jan 1.
 #   - In the entire record, there are 94 events that end of Dec 31.
 #   Of these, it looks like 5 were from the same city and bridged two years
 #
 #   Moved to .py file from .ipynb on 2019.12.31 by Cascade Tuholske
-#   
-#   NOTE UPDATE FILE NAME AS NEEDED 
+#
+#   NOTE UPDATE FILE NAME AS NEEDED
 # 
 ##################################################################################
 
@@ -25,9 +25,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Dir and FN
-FN_IN = "/home/cascade/projects/data_out_urbanheat/All_data20193112.csv"  
-FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20193112.csv" 
-df = pd.read_csv(fn)
+FN_IN = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv"
+FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv" 
+df = pd.read_csv(FN_IN)
 
 #### 1. Find Edges ##################################################################################
 # NOTE Build query to find dates XXXX.12.31 and XXXX.01.01 
