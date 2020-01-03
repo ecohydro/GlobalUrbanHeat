@@ -6,15 +6,15 @@
 #   Fix to resolve problem TBD.
 #
 #   By Cascade Tuholske, 2019-10-19
-#   
+#
 #   Preliminary Findings
 #   - In the entire record, there are 97 events that start on Jan 1.
 #   - In the entire record, there are 94 events that end of Dec 31.
 #   Of these, it looks like 5 were from the same city and bridged two years
 #
 #   Moved to .py file from .ipynb on 2019.12.31 by Cascade Tuholske
-#   
-#   NOTE UPDATE FILE NAME AS NEEDED 
+#
+#   NOTE UPDATE FILE NAME AS NEEDED
 # 
 ##################################################################################
 
@@ -25,11 +25,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Dir and FN
-fn = "/home/cascade/projects/data_out_urbanheat/All_data20191107.csv"  
-df = pd.read_csv(fn)
+FN_IN = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv"
+FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv" 
+df = pd.read_csv(FN_IN)
 
 #### 1. Find Edges ##################################################################################
-
 # NOTE Build query to find dates XXXX.12.31 and XXXX.01.01 
 # NOTE Events col are strings
 
@@ -92,13 +92,14 @@ print(df_1231['ID_HDC_G0'].isin(df_0101['ID_HDC_G0']).value_counts())
 
 # Merge based on city ID to only include overlaps
 merge = pd.merge(df_1231, df_0101, on = 'ID_HDC_G0', how = 'inner')
-print(merge.head(10))
 
 # Look for years the are one apart and get rows
+
 out = []
 for i, year in merge.iterrows():
         if year['year_y'] - year['year_x'] == 1:
             out.append(i)
+out
 
 # Get the rows with dec 31 - jan 1
 overlap = merge.loc[out]
@@ -106,7 +107,7 @@ overlap
 
 #### 2. Make new data from overlaps ##################################################################################
 def string_hunt(string_list, out_list, dtype):
-    """Helper function to pull tmax record strings from a list without , and turn them into ints"""
+    """Helper function to pull tmax record strings from a list of Tmaxs, and turn dates into ints"""
     for i in string_list: # set the strings from X list
         if len(i) > 1:
             if '[' in i:
@@ -131,6 +132,7 @@ def string_hunt(string_list, out_list, dtype):
     return out_list
 
 # loop by row to get temps
+
 df_overlap = pd.DataFrame()
 
 # Lists for df
@@ -168,8 +170,8 @@ for i, row in overlap.iterrows():
     temps_list_list.append(temps_list)
     
     ## Total Days
-    total_days_x = row['total_days_x'] + dur_y
-    total_days_y = row['total_days_y'] - dur_y
+    total_days_x = row['total_days_x'] + dur_y # add event dur from year x
+    total_days_y = row['total_days_y'] - dur_y # subtract event dur from year y
     
     total_days_x_list.append(total_days_x)
     total_days_y_list.append(total_days_y)
@@ -190,7 +192,7 @@ for i, row in overlap.iterrows():
     duration_list.append(duration)
     
     ### Intensity [x - 13 for x in a]
-    intensity = [x - 40.6 for x in temps_list] # <<<<<<-------------------------- UPDATE AS NEEDED
+    intensity = [x - 40.6 for x in temps_list] # <<<<<<-------------------------- UPDATE TMAX AS NEEDED
     intensity_list.append(intensity)
     
     ### Avg_temp
@@ -221,10 +223,7 @@ for i, row in overlap.iterrows():
     event_x_id_list.append(event_x_id)
     event_y_id = row['Event_ID_y']
     event_y_id_list.append(event_y_id)
-    
-    #avg_temp	avg_intensity	tot_intensity	event_dates	intensity
 
-# Write it to a df
 df_overlap['ID_HDC_G0'] = city_id_list
 df_overlap['Event_ID_x'] = event_x_id_list
 df_overlap['Event_ID_y'] = event_y_id_list
@@ -239,7 +238,7 @@ df_overlap['avg_temp'] = avg_temp_list
 df_overlap['intensity'] = intensity_list
 df_overlap['tot_intensity'] = tot_intensity_list
 df_overlap['avg_intensity'] = avg_intensity_list
-print(df_overlap.head(1))
+df_overlap.head(1)
 
 #### 3. Fix Total Days for Cities ##################################################################################
 # Here we subtract the event days 
@@ -249,10 +248,12 @@ print(df_overlap.head(1))
 
 # Get List of Years and Cities for the dec-jan overlap and then find them in the dataset
 
+# Get List of Years and Cities for the dec-jan overlap and then find them in the dataset
+
 # Start with year_x
-years_x = list(df_out['year_x'])
-id_x = list(df_out['ID_HDC_G0'])
-total_days_x = list(df_out['total_days_x'])
+years_x = list(df_overlap['year_x'])
+id_x = list(df_overlap['ID_HDC_G0'])
+total_days_x = list(df_overlap['total_days_x'])
 
 x_list = []
 for i in zip(years_x,id_x, total_days_x):
@@ -273,10 +274,10 @@ for x in x_list:
             df_copy.loc[i,'total_days'] = x[2]
             print(df_copy.loc[i,'total_days'])
 
-# Start with year_y 
-years_y = list(df_out['year_y'])
-id_y = list(df_out['ID_HDC_G0'])
-total_days_y = list(df_out['total_days_y'])
+# Now with year_y 
+years_y = list(df_overlap['year_y'])
+id_y = list(df_overlap['ID_HDC_G0'])
+total_days_y = list(df_overlap['total_days_y'])
 
 y_list = []
 for i in zip(years_y, id_y, total_days_y):
@@ -295,31 +296,30 @@ for y in y_list:
 
 #### 4. Add Meta data back ##################################################################################
 
-# Make a copy as back up in case you over right df_copy
-df_copy_extra = df_copy.copy()
-
-# copy df_out overlap, df_out is the overlap dataframe
+# copy overlap 
 df_overlap_copy = df_overlap.copy()
 
-print(df_overlap_copy.head(1))
+print(len(df_overlap_copy))
+df_overlap_copy.head(1)
 
-# Get Columns to merge
-cols_to_use = df.columns.difference(df_out_copy.columns) # find missing columns
-cols_list = list(cols_to_use) # list
-cols_list.append('ID_HDC_G0') # add IDS
-df_cols = df_copy[cols_list]
+# Get columns to merge and merge
+df_cols = df_copy[['CTR_MN_NM', 'ID_HDC_G0']]
+df_cols = df_cols.drop_duplicates('ID_HDC_G0')
+df_overlap_copy = df_overlap_copy.merge(df_cols, on = 'ID_HDC_G0', how = 'inner')
 
-# Drop duplicates
-df_cols = df_cols.drop_duplicates('ID_HDC_G0', keep = 'first')
-df_out_copy_merge = df_out_copy.merge(df_cols, on = 'ID_HDC_G0', how = 'inner')
+print(len(df_overlap_copy))
+df_overlap_copy
 
 # drop and rename columns
-df_out_copy_merge = df_out_copy_merge.drop(columns = ['Unnamed: 0', 'Unnamed: 0.1'])
-df_out_copy.rename(columns = {'year_x':'year'}, inplace = True) 
-df_out_copy.rename(columns = {'total_days_x':'total_days'}, inplace = True) 
+df_overlap_copy.rename(columns = {'year_x':'year'}, inplace = True) 
+df_overlap_copy.rename(columns = {'total_days_x':'total_days'}, inplace = True) 
+
+df_overlap_copy
 
 #### 5. Drop overlapped years and add in new DF ##################################################################################
-print(overlap.head(1))
+
+## Drop overlap events based on event id from all events
+overlap.head(1)
 
 # Get events
 jan_ids = list(overlap['Event_ID_y'])
@@ -332,7 +332,8 @@ df_events = df_copy.copy()
 # Jan
 for event in jan_ids:
     df_events = df_events[df_events['Event_ID'] != event]
-    
+
+# Dec
 for event in dec_ids:
     df_events = df_events[df_events['Event_ID'] != event]
 
@@ -343,25 +344,25 @@ df_events = df_events.drop(columns=['Unnamed: 0', 'Unnamed: 0.1'])
 df_events.head()
 
 print(len(df_events))
-print(len(df_out_copy_merge))
-
+print(len(df_overlap_copy))
 print(df_events.columns)
-print(df_out_copy_merge.columns)
+print(df_overlap_copy.columns)
 
 # Make 'x' event ids for final df
-df_out_copy_merge['Event_ID'] = df_out_copy_merge['Event_ID_x']
+df_overlap_copy['Event_ID'] = df_overlap_copy['Event_ID_x']
 
 # drop event x y event ID cols 
-df_out_copy_merge = df_out_copy_merge = df_out_copy_merge.drop(columns = ['Event_ID_x','Event_ID_y'])
+cols_to_use = df_overlap_copy.columns.difference(df_events.columns) # find missing columns
+cols_list = list(cols_to_use) # list
+cols_list
+
+df_overlap_copy = df_overlap_copy.drop(columns = cols_list)
+df_overlap_copy
 
 print(len(df_events))
-print(len(df_out_copy_merge))
-
-df_final = pd.concat([df_events, df_out_copy_merge], sort = True)
-
+print(len(df_overlap_copy))
+df_final = pd.concat([df_events, df_overlap_copy], sort = True)
 print(len(df_final))
 
 # Save it out
-
-# FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20191107.csv"  # Note: Need ?dl=1 to make sure this file gets read correctly
-# df_final.to_csv(FN_OUT)
+df_final.to_csv(FN_OUT)
