@@ -105,6 +105,8 @@ out
 overlap = merge.loc[out]
 overlap
 
+print('STEP 1 DONE!')
+
 #### 2. Make new data from overlaps ##################################################################################
 def string_hunt(string_list, out_list, dtype):
     """Helper function to pull tmax record strings from a list of Tmaxs, and turn dates into ints"""
@@ -240,6 +242,8 @@ df_overlap['tot_intensity'] = tot_intensity_list
 df_overlap['avg_intensity'] = avg_intensity_list
 df_overlap.head(1)
 
+print('STEP 2 DONE!')
+
 #### 3. Fix Total Days for Cities ##################################################################################
 # Here we subtract the event days 
 # from the Jan year (y) from year y and we add those dates 
@@ -294,6 +298,8 @@ for y in y_list:
             df_copy.loc[i,'total_days'] = y[2]
             print(df_copy.loc[i,'total_days'])
 
+print('STEP 3 DONE!')
+
 #### 4. Add Meta data back ##################################################################################
 
 # copy overlap 
@@ -315,6 +321,8 @@ df_overlap_copy.rename(columns = {'year_x':'year'}, inplace = True)
 df_overlap_copy.rename(columns = {'total_days_x':'total_days'}, inplace = True) 
 
 df_overlap_copy
+
+print('STEP 4 DONE!')
 
 #### 5. Drop overlapped years and add in new DF ##################################################################################
 
@@ -366,3 +374,5 @@ print(len(df_final))
 
 # Save it out
 df_final.to_csv(FN_OUT)
+
+print('STEP 5 DONE!')
