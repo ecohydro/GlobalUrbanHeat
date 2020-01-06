@@ -348,7 +348,7 @@ for event in dec_ids:
 print(len(df_events))
 
 # Merge 
-df_events = df_events.drop(columns=['Unnamed: 0', 'Unnamed: 0.1'])
+df_events = df_events.drop(columns=['Unnamed: 0']) # tried without 'Unnamed: 0.1'
 df_events.head()
 
 print(len(df_events))
