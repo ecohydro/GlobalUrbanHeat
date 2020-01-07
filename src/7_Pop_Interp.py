@@ -71,8 +71,8 @@ df2016 = df2016.interpolate('linear', axis = 1)
 # join
 df_join = df7590.join(df9000.iloc[:,1:])
 df_join = df_join.join(df0015.iloc[:,1:])
-df_join['P2016'] = new_df['P2016']
+df_join['P2016'] = df2016['P2016']
 df_join['ID_HDC_G0'] = ghs['ID_HDC_G0']
 
 # Save it out 
-#df_join.to_csv(out_fn)
+df_join.to_csv(out_fn)
