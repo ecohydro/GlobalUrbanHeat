@@ -36,6 +36,7 @@ from statistics import mean
 import julian
 import multiprocessing as mp 
 from multiprocessing import Pool
+import time
 
 #### 1 Function turns csv into x-array
 def csv_to_xr(file_in, time_dim, space_dim):
@@ -286,14 +287,14 @@ dir_out = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
 fn_out = 'CHIRTS-GHS-Events-Stats'
 time_dim = 'date'
 space_dim = 'ID_HDC_G0'
-Tthresh = 40.6
+Tthresh = 39.4
 
 # Git File list
 fn_list = glob.glob(dir_in+'*.csv')
 
 # Execute code
 print('STARTING LOOP')
-parallel_loop(temp_ghs, fn_list, 4)
+parallel_loop(stats_parallel, fn_list, 4)
 print('ENDING LOOP')
 
 
