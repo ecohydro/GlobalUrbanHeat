@@ -25,8 +25,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Dir and FN
-FN_IN = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv"
-FN_OUT = "/home/cascade/projects/data_out_urbanheat/All_data20200102.csv" 
+FN_IN = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_377C.csv" # SET
+FN_OUT = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_377C.csv" # SET
+tmax = 37.8 # UPDATE
 df = pd.read_csv(FN_IN)
 
 #### 1. Find Edges ##################################################################################
@@ -194,7 +195,7 @@ for i, row in overlap.iterrows():
     duration_list.append(duration)
     
     ### Intensity [x - 13 for x in a]
-    intensity = [x - 40.6 for x in temps_list] # <<<<<<-------------------------- UPDATE TMAX AS NEEDED
+    intensity = [x - tmax for x in temps_list] # <<<<<<-------------------------- UPDATE TMAX AS NEEDED
     intensity_list.append(intensity)
     
     ### Avg_temp

@@ -51,7 +51,7 @@ def event_stack_loop(dir_in):
 
 # File Paths + FN
 DATA_IN = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
-fn_out = '/home/cascade/projects/data_out_urbanheat/All_data20200102.csv'
+fn_out = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C.csv' #<<< UPDATE
 
 # Run script
 event_stack = event_stack_loop(DATA_IN)

@@ -34,6 +34,9 @@ import geopandas as gpd
 import glob
 from statistics import mean
 import julian
+import multiprocessing as mp 
+from multiprocessing import Pool
+import time
 
 #### 1 Function turns csv into x-array
 def csv_to_xr(file_in, time_dim, space_dim):
@@ -229,53 +232,50 @@ def tmax_stats(df_in):
 
     return df_out
 
-#### 5 Loops through a file list and applies functions 1 - 4
+#### 5-A Loops through a file list in parallel and applies functions 1 - 4
 ####   to the data to produce Tmax stats for all tmax events in
 ####   a given year across all cities in the dataset
 
-def stats_loop(dir_in, dir_out, fn_out, time_dim, space_dim, Tthresh):
+# start pools
+def parallel_loop(function, file_list, cpu_num):
+    """  
+    """ 
+    start = time.time()
+    pool = Pool(processes = cpu_num)
+    pool.map(function, file_list)
+    pool.close()
 
-    """ Loop through a dir with csvs to apply csv_to_xr and
-    tmax_stats function and save out a .csv for each year
+    end = time.time()
+    print(end-start)
 
-    Args:
-        dir_in = dir path to loop through
-        dir_out = dir path to save files out
-        fn_out = string to label out files
-        time_dim = name for time dim as a str ... use date :-) for csv_to_xr function
-        space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0) for csv_to_xr function
-        Tthresh = int of temp threshold for temp_event function -- 40.6 is used
+def stats_parallel(fn):
 
-    """
+    # print current process
+    print(mp.current_process())
 
     # Open the GHS-ID List with GeoPANDAS read_file
     ghs_ids_fn = 'GHS-UCSB-IDS.csv'
     ghs_ids_df = pd.read_csv(DATA_INTERIM+ghs_ids_fn)
 
-    # Git File list
-    fn_list = glob.glob(dir_in+'*.csv')
+    # Get year for arg for temp_event function
+    year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
+    print(year)
 
-    for fn in sorted(fn_list):
+    # read csv as a data array
+    temp_xr_da = csv_to_xr(fn, time_dim, space_dim)
 
-        # Get year for arg for temp_event function
-        year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
-        print(year)
+    # data array to tmax events, out as df
+    df_days = tmax_days(temp_xr_da, Tthresh)
 
-        # read csv as a data array
-        temp_xr_da = csv_to_xr(fn, time_dim, space_dim)
+    # tmax events stats, out as df
+    df_out = tmax_stats(df_days)
 
-        # data array to tmax events, out as df
-        df_days = tmax_days(temp_xr_da, Tthresh)
+    # merge to get countries
+    ghs_ids_df_out = ghs_ids_df.merge(df_out, on='ID_HDC_G0', how = 'inner')
+    # write it all out
+    ghs_ids_df_out.to_csv(dir_out+fn_out+year+'.csv')
 
-        # tmax events stats, out as df
-        df_out = tmax_stats(df_days)
-
-        # merge to get countries
-        ghs_ids_df_out = ghs_ids_df.merge(df_out, on='ID_HDC_G0', how = 'inner')
-        # write it all out
-        ghs_ids_df_out.to_csv(dir_out+fn_out+year+'.csv')
-
-        print(year, 'SAVED!')
+    print(year, 'SAVED!')
 
 #### Run Code
 
@@ -289,5 +289,60 @@ time_dim = 'date'
 space_dim = 'ID_HDC_G0'
 Tthresh = 40.6
 
-# Run it!
-stats_loop(dir_in, dir_out, fn_out, time_dim, space_dim, Tthresh)
+# Git File list
+fn_list = glob.glob(dir_in+'*.csv')
+
+# Execute code
+print('STARTING LOOP')
+parallel_loop(stats_parallel, fn_list, 4)
+print(Tthresh)
+print('ENDING LOOP')
+
+
+#### 5 Loops through a file list and applies functions 1 - 4
+####   to the data to produce Tmax stats for all tmax events in
+####   a given year across all cities in the dataset
+
+# def stats_loop(dir_in, dir_out, fn_out, time_dim, space_dim, Tthresh):
+
+#     """ Loop through a dir with csvs to apply csv_to_xr and
+#     tmax_stats function and save out a .csv for each year
+
+#     Args:
+#         dir_in = dir path to loop through
+#         dir_out = dir path to save files out
+#         fn_out = string to label out files
+#         time_dim = name for time dim as a str ... use date :-) for csv_to_xr function
+#         space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0) for csv_to_xr function
+#         Tthresh = int of temp threshold for temp_event function -- 40.6 is used
+
+#     """
+
+#     # Open the GHS-ID List with GeoPANDAS read_file
+#     ghs_ids_fn = 'GHS-UCSB-IDS.csv'
+#     ghs_ids_df = pd.read_csv(DATA_INTERIM+ghs_ids_fn)
+
+#     # Git File list
+#     fn_list = glob.glob(dir_in+'*.csv')
+
+#     for fn in sorted(fn_list):
+
+#         # Get year for arg for temp_event function
+#         year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
+#         print(year)
+
+#         # read csv as a data array
+#         temp_xr_da = csv_to_xr(fn, time_dim, space_dim)
+
+#         # data array to tmax events, out as df
+#         df_days = tmax_days(temp_xr_da, Tthresh)
+
+#         # tmax events stats, out as df
+#         df_out = tmax_stats(df_days)
+
+#         # merge to get countries
+#         ghs_ids_df_out = ghs_ids_df.merge(df_out, on='ID_HDC_G0', how = 'inner')
+#         # write it all out
+#         ghs_ids_df_out.to_csv(dir_out+fn_out+year+'.csv')
+
+#         print(year, 'SAVED!')
