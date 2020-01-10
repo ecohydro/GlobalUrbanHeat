@@ -287,7 +287,7 @@ dir_out = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
 fn_out = 'CHIRTS-GHS-Events-Stats'
 time_dim = 'date'
 space_dim = 'ID_HDC_G0'
-Tthresh = 39.4
+Tthresh = 40.6
 
 # Git File list
 fn_list = glob.glob(dir_in+'*.csv')
@@ -295,6 +295,7 @@ fn_list = glob.glob(dir_in+'*.csv')
 # Execute code
 print('STARTING LOOP')
 parallel_loop(stats_parallel, fn_list, 4)
+print(Tthresh)
 print('ENDING LOOP')
 
 
