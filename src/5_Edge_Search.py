@@ -25,9 +25,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Dir and FN
-FN_IN = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_377C.csv" # SET
-FN_OUT = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_377C.csv" # SET
-tmax = 37.8 # UPDATE
+FN_IN = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C.csv" # SET
+FN_OUT = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es.csv" # SET
+tmax = 40.6 # UPDATE
 df = pd.read_csv(FN_IN)
 
 #### 1. Find Edges ##################################################################################
