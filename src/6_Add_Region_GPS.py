@@ -20,8 +20,8 @@ import geopandas as gpd
 
 #### Load Files
 
-events_fn = '/home/cascade/projects/data_out_urbanheat/All_data20200102.csv' # Update as needed
-out_fn = '/home/cascade/projects/data_out_urbanheat/All_data20200102.csv' # Update as needed
+events_fn = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es.csv' # Update as needed
+out_fn = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es_final.csv.csv' # Update as needed
 events = pd.read_csv(events_fn)
 ghs = gpd.read_file('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp')
 countries = pd.read_csv('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/countrylist.csv')
