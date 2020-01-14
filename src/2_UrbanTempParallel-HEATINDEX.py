@@ -77,7 +77,7 @@ def temp_ghs(dir_nm):
         if fn.startswith('RH'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
 
             # Get the date of each chirt file
-            date = (fn.split('Tmax.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
+            date = (fn.split('RH.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
             print(dir_year)
             print(date)
 
@@ -143,9 +143,9 @@ dir_list= sorted(glob(DATA_IN+'*/'))
 dir_list = dir_list[:-1]
 
 # # set number of cores to use
-# cpu_num = 20 
+cpu_num = 20 
 
 # # Execute code
-# print('STARTING LOOP')
-# parallel_loop(temp_ghs, dir_list, 20)
-# print('ENDING LOOP')
+print('STARTING LOOP')
+parallel_loop(temp_ghs, dir_list, 20)
+print('ENDING LOOP')
