@@ -2,6 +2,17 @@
 # Designed to run through a file list in parallel for a dir structured by year
 # 
 # By Cascade Tuholske 2019-08-20
+#
+# UPDATED ON 2020.01.14 to run on CHIRTS Heat INDEX FILES 
+
+########################################
+# 
+#   HEY <<<<<<<<<<< -------- HEY LOOK HERE! 
+#   BEFORE RUNNING
+#   CHECK ALL FILE 
+#   NAMES AND PATHS
+#
+########################################
 
 ########################################
 # 
@@ -101,9 +112,6 @@ def temp_ghs(dir_nm):
 
             # Group poly_IDs find temp
             avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
-            
-            # For Heat Index convert F to C
-            #avg = (avg - 32) * 5/9
 
             # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
             avg_ID = np.array(avg.ghs)
