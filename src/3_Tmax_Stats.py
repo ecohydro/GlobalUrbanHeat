@@ -258,7 +258,8 @@ def stats_parallel(fn):
     ghs_ids_df = pd.read_csv(DATA_INTERIM+ghs_ids_fn)
 
     # Get year for arg for temp_event function
-    year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
+    #year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
+    year = fn.split('GHS-Tmax-DAILY-HEATINDEX_')[1].split('.csv')[0]
     print(year)
 
     # read csv as a data array
@@ -281,10 +282,10 @@ def stats_parallel(fn):
 
 # Dirs and FN Names
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # interim data
-dir_in = DATA_INTERIM+'CHIRTS-GHS-DAILY-RAW/' # output from avg temp
+dir_in = DATA_INTERIM+'CHIRTS-GHS-DAILY-HI/' # output from avg temp
 
-dir_out = DATA_INTERIM+'CHIRTS-GHS-RAW-Events-Stats/'
-fn_out = 'CHIRTS-GHS-Raw-Events-Stats'
+dir_out = DATA_INTERIM+'CHIRTS-GHS-HI-Events-Stats/'
+fn_out = 'CHIRTS-GHS-HI-Events-Stats'
 time_dim = 'date'
 space_dim = 'ID_HDC_G0'
 Tthresh = 40.6
@@ -294,7 +295,7 @@ fn_list = glob.glob(dir_in+'*.csv')
 
 # Execute code
 print('STARTING LOOP')
-parallel_loop(stats_parallel, fn_list, 4)
+parallel_loop(stats_parallel, fn_list, 10)
 print(Tthresh)
 print('ENDING LOOP')
 

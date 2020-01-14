@@ -74,10 +74,10 @@ def temp_ghs(dir_nm):
         dir_year = dir_nm.split(DATA_IN)[1].split('/')[0]
 
         # find all the tif files
-        if fn.startswith('RH'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
+        if fn.startswith('HeatIndex'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
 
             # Get the date of each chirt file
-            date = (fn.split('RH.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
+            date = (fn.split('HeatIndex.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
             print(dir_year)
             print(date)
 
@@ -101,6 +101,9 @@ def temp_ghs(dir_nm):
 
             # Group poly_IDs find temp
             avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
+            
+            # For Heat Index convert F to C
+            #avg = (avg - 32) * 5/9
 
             # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
             avg_ID = np.array(avg.ghs)
