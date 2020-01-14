@@ -25,8 +25,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Dir and FN
-FN_IN = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C.csv" # SET
-FN_OUT = "/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es.csv" # SET
+DATA_PROCESSED = '/home/cascade/projects/UrbanHeat/data/processed/'
+FN_IN = DATA_PROCESSED+"All_data_Raw406.csv" # SET
+FN_OUT = DATA_PROCESSED+"All_data_Raw406_es.csv" # SET
 tmax = 40.6 # UPDATE
 df = pd.read_csv(FN_IN)
 

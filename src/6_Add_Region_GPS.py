@@ -20,9 +20,11 @@ import geopandas as gpd
 
 #### Load Files
 
-events_fn = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es.csv' # Update as needed
-out_fn = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C_es_final.csv.csv' # Update as needed
-events = pd.read_csv(events_fn)
+DATA_PROCESSED = '/home/cascade/projects/UrbanHeat/data/processed/'
+FN_IN = DATA_PROCESSED+"All_data_Raw406.csv" # SET
+FN_OUT = DATA_PROCESSED+"All_data_Raw406_es_final.csv" # SET
+
+events = pd.read_csv(FN_IN)
 ghs = gpd.read_file('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp')
 countries = pd.read_csv('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/countrylist.csv')
 
@@ -61,7 +63,7 @@ events = events.merge(df, on = 'ID_HDC_G0', how = 'inner')
 print(events.head())
 
 # save out file
-events.to_csv(out_fn)
+events.to_csv(FN_OUT)
 
 #################################################################################
 #

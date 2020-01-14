@@ -280,11 +280,11 @@ def stats_parallel(fn):
 #### Run Code
 
 # Dirs and FN Names
-dir_in = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-DAILY/' # output from avg temp
-# DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # ghs ID list
-DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/' # GHS ID LIST TANA
-dir_out = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
-fn_out = 'CHIRTS-GHS-Events-Stats'
+DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # interim data
+dir_in = DATA_INTERIM+'CHIRTS-GHS-DAILY-RAW/' # output from avg temp
+
+dir_out = DATA_INTERIM+'CHIRTS-GHS-RAW-Events-Stats/'
+fn_out = 'CHIRTS-GHS-Raw-Events-Stats'
 time_dim = 'date'
 space_dim = 'ID_HDC_G0'
 Tthresh = 40.6
