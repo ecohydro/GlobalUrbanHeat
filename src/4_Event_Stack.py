@@ -33,15 +33,16 @@ def event_stack_loop(dir_in):
     df_out = pd.DataFrame()
     
     for fn in sorted(fn_list):
-    
+            
         # Likely need to change year to int ... df['purchase'].astype(str).astype(int) <<<<---- FIX 
-        year = fn.split('CHIRTS-GHS-Events-Stats')[2].split('.csv')[0] # for some reason it's 2...?
+        year = fn.split('CHIRTS-GHS-Raw-Events-Stats')[1].split('.csv')[0] # for some reason it's 2...?
         print(year)
         
         # open csv 
         stats = pd.read_csv(fn)
         
         stats['year'] = year
+#         print('stats is ', stats.shape)
         
         print(len(df_out))
         
@@ -50,12 +51,15 @@ def event_stack_loop(dir_in):
     return df_out
 
 # File Paths + FN
-DATA_IN = '/home/cascade/projects/data_out_urbanheat/CHIRTS-GHS-Events-Stats/'
-fn_out = '/home/cascade/projects/data_out_urbanheat/heatrange/All_data20200109_406C.csv' #<<< UPDATE
+DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # interim data
+DATA_PROCESSED = '/home/cascade/projects/UrbanHeat/data/processed/'
+DATA_IN = DATA_INTERIM+'CHIRTS-GHS-RAW-Events-Stats/' # output from avg temp
+
+fn_out = DATA_PROCESSED+'All_data_Raw406.csv' #<<< UPDATE
 
 # Run script
 event_stack = event_stack_loop(DATA_IN)
-print(len(event_stack))
+# print(len(event_stack))
 
 # Add 'Event_ID'
 event_stack = event_stack.rename(columns = {'Unnamed: 0' : 'Event_ID'})
