@@ -2,6 +2,17 @@
 # Designed to run through a file list in parallel for a dir structured by year
 # 
 # By Cascade Tuholske 2019-08-20
+#
+# UPDATED ON 2020.01.14 to run on CHIRTS Heat INDEX FILES 
+
+########################################
+# 
+#   HEY <<<<<<<<<<< -------- HEY LOOK HERE! 
+#   BEFORE RUNNING
+#   CHECK ALL FILE 
+#   NAMES AND PATHS
+#
+########################################
 
 ########################################
 # 
@@ -50,6 +61,10 @@ DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 # Loop through dirs in //
 def temp_ghs(dir_nm):
     
+    # log
+    log_df = pd.DataFrame()
+    log_list = []
+    
     # print current process
     print(mp.current_process())
 
@@ -73,11 +88,13 @@ def temp_ghs(dir_nm):
         # Set dir name for writing files
         dir_year = dir_nm.split(DATA_IN)[1].split('/')[0]
 
-        # find all the tif files
-        if fn.startswith('RH'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
+        # find all the tif files <<<<-------------------------------- UPDATED 2020.01.15 it should work now!
+        if fn.startswith('HeatIndex') and 'dexmap' not in fn:
+            
+            log_list.append(fn)
 
             # Get the date of each chirt file
-            date = (fn.split('RH.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
+            date = (fn.split('HeatIndex.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
             print(dir_year)
             print(date)
 
@@ -92,15 +109,16 @@ def temp_ghs(dir_nm):
                     {'ghs' : (['y', 'x'], polyRst_da),
                     'temp' : (['y', 'x'], tempRst_da),})
 
-            # UPDATED 2019-08-19 Mask the CHIRTS PIXELS FIRST, THEN GHS
-            # Mask values from chirt that are ocean in ghs and chirt in our ds 
-            ds_mask = ds.where(ds.temp != -9999, drop = False) #<<<<------ need to double check this
-
-            # Mask pixels for both ghs and chirts where ghs cities are not present
-            ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False)
-
-            # Group poly_IDs find temp
-            avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
+            # UPDATED 2020.01.15 for HI 
+            ds_mask = ds.fillna(-9999) # turn all NANS into -9999, but check HI rasters if ocean are NAN or -9999
+            
+            # turn all city ID pixels to NAN where no temp value exists (e.g. ocean areas)
+            ds_mask['ghs'] = ds_mask.ghs.where(ds_mask.temp != -9999, drop = False) 
+            
+            # Mask all -9999 GHS pixels for city IDS (e.g. no city exists)
+            ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False) 
+            
+            avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS) # Find Averages
 
             # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
             avg_ID = np.array(avg.ghs)
@@ -116,7 +134,11 @@ def temp_ghs(dir_nm):
 
             # merge the df
             ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer') #<<<<----- NEED TO FIX THIS
-
+    
+    # write out log
+    log_df['log'] = log_list
+    log_df.to_csv('/home/cascade/projects/Log'+dir_year+'.csv')
+    
     ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
     print('DONE ! ! !')
 
@@ -146,6 +168,6 @@ dir_list = dir_list[:-1]
 cpu_num = 20 
 
 # # Execute code
-print('STARTING LOOP')
+print('STARTING LOOP - OH JOY!!!')
 parallel_loop(temp_ghs, dir_list, 20)
 print('ENDING LOOP')
