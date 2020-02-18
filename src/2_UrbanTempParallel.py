@@ -3,6 +3,8 @@
 # 
 # By Cascade Tuholske 2019-08-20
 
+# Last run on realitive humidity ... I think CPT 2020.02.17
+
 ########################################
 # 
 #   HEY <<<<<<<<<<< -------- HEY LOOK HERE! 
@@ -88,41 +90,41 @@ def temp_ghs(dir_nm):
             print(dir_year)
             print(date)
 
-#             # Open CHIRT Data and turn data into array
-#             tempRst = rasterio.open(dir_nm+'/'+fn)
+            # Open CHIRT Data and turn data into array
+            tempRst = rasterio.open(dir_nm+'/'+fn)
 
-#             # Make arrays into x    array DataArray
-#             tempRst_da = xr.DataArray(tempRst.read(1), dims = ['y', 'x']) # y and x are our 2-d labels
+            # Make arrays into x    array DataArray
+            tempRst_da = xr.DataArray(tempRst.read(1), dims = ['y', 'x']) # y and x are our 2-d labels
 
-#             # Make xarray dataset
-#             ds = xr.Dataset(data_vars = 
-#                     {'ghs' : (['y', 'x'], polyRst_da),
-#                     'temp' : (['y', 'x'], tempRst_da),})
+            # Make xarray dataset
+            ds = xr.Dataset(data_vars = 
+                    {'ghs' : (['y', 'x'], polyRst_da),
+                    'temp' : (['y', 'x'], tempRst_da),})
 
-#             # UPDATED 2019-08-19 Mask the CHIRTS PIXELS FIRST, THEN GHS
-#             # Mask values from chirt that are ocean in ghs and chirt in our ds 
-#             ds_mask = ds.where(ds.temp != -9999, drop = False) #<<<<------ need to double check this
+            # UPDATED 2019-08-19 Mask the CHIRTS PIXELS FIRST, THEN GHS
+            # Mask values from chirt that are ocean in ghs and chirt in our ds 
+            ds_mask = ds.where(ds.temp != -9999, drop = False) #<<<<------ need to double check this
 
-#             # Mask pixels for both ghs and chirts where ghs cities are not present
-#             ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False)
+            # Mask pixels for both ghs and chirts where ghs cities are not present
+            ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False)
 
-#             # Group poly_IDs find temp
-#             avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
+            # Group poly_IDs find temp
+            avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
 
-#             # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
-#             avg_ID = np.array(avg.ghs)
-#             avg_temp = np.array(avg.temp)
+            # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
+            avg_ID = np.array(avg.ghs)
+            avg_temp = np.array(avg.temp)
 
-#             print(len(avg_ID))
-#             print(len(avg_temp))
+            print(len(avg_ID))
+            print(len(avg_temp))
 
-#             # turn chirt max and IDS into a DF
-#             df_avg = pd.DataFrame()
-#             df_avg[date] = avg_temp
-#             df_avg['ID_HDC_G0'] = avg_ID
+            # turn chirt max and IDS into a DF
+            df_avg = pd.DataFrame()
+            df_avg[date] = avg_temp
+            df_avg['ID_HDC_G0'] = avg_ID
 
-#             # merge the df
-#             ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer')
+            # merge the df
+            ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer')
 
     ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
     print('DONE ! ! !')
@@ -154,4 +156,5 @@ cpu_num = 20
 # Execute code
 print('STARTING LOOP')
 parallel_loop(temp_ghs, dir_list, 20)
+print(DATA_OUT)
 print('ENDING LOOP')
