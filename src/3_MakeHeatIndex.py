@@ -180,13 +180,16 @@ def apply_heatindex(DIR_Tmax, DIR_RH, DIR_HI, unit_in, unit_out):
         # Make heat index
         hi = heatindex(Tmax_xr, RH_xr, unit_in = unit_in, unit_out = unit_out)
 
-
-        # CASCADE GO LOOK AT HOW X-ARRAYS ARE WRITTEN TO CSVS IN EARLIER CODE <<<<---- 2020.02.19
+        # Get countries and city ids
+        df_out = pd.read_csv(Tmax_fn)
+        df_out = df_out[['ID_HDC_G0', 'CTR_MN_NM']]
 
         # write to csv
-        df = hi.to_pandas()
+        hi_df = hi.to_pandas()
+        #hi_df['ID_HDC_G0'] = hi_df.index
+        df_out = df_out.merge(hi_df, on = 'ID_HDC_G0', how = 'inner')
         df_out_nm = 'GHS-HI-DAILY_'+Tmax_year+'.csv'
-        df.to_csv(DIR_HI+df_out_nm)
+        df_out.to_csv(DIR_HI+df_out_nm)
         print(RH_year, ' done \n')
     
     print('ALL DONE!')

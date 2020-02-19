@@ -56,11 +56,11 @@ def csv_to_xr(file_in, time_dim, space_dim):
     print(df.shape)
     
     # Moditified by CPT on 2020.02.19 for heat index csvs
-#    df_id = df[space_dim] # get IDs
-#    df_temp = df.iloc[:,3:] # get only temp columns
+    df_id = df[space_dim] # get IDs
+    df_temp = df.iloc[:,3:] # get only temp columns
 
-    df_temp = df.copy() # get only temp columns
-    df_temp.index = df.index # set index values
+    # df_temp = df.copy() # get only temp columns
+    # df_temp.index = df.index # set index values
     df_temp_drop = df_temp.dropna() # Drop cities w/ no temp record
     print(len(df_temp_drop))
 
