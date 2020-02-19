@@ -20,6 +20,8 @@
 #
 #   This come from cpt_tmax_stats_final notebook and was adapated on 2019.12.31 to .py
 #
+#   Was run on 2020.02.19 on HI data   
+#
 #################################################################################
 
 #### Dependencies
@@ -52,10 +54,13 @@ def csv_to_xr(file_in, time_dim, space_dim):
 
     df = pd.read_csv(file_in) # read the file in as a df
     print(df.shape)
+    
+    # Moditified by CPT on 2020.02.19 for heat index csvs
+#    df_id = df[space_dim] # get IDs
+#    df_temp = df.iloc[:,3:] # get only temp columns
 
-    df_id = df[space_dim] # get IDs
-    df_temp = df.iloc[:,3:] # get only temp columns
-    df_temp.index = df_id # set index values
+    df_temp = df.copy() # get only temp columns
+    df_temp.index = df.index # set index values
     df_temp_drop = df_temp.dropna() # Drop cities w/ no temp record
     print(len(df_temp_drop))
 
