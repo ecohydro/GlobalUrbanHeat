@@ -1,3 +1,6 @@
+# Script turns GHS-UCDB polygons into a raster
+# We are using 'all-touched' ... see rasterio documentation
+
 import rasterio
 from rasterio import features
 
