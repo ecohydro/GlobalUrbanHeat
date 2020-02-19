@@ -264,7 +264,7 @@ def stats_parallel(fn):
 
     # Get year for arg for temp_event function
     #year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
-    year = fn.split('GHS-Tmax-DAILY-HEATINDEX_')[1].split('.csv')[0]
+    year = fn.split('GHS-HI-DAILY_')[1].split('.csv')[0] # Updated 2020.02.19 CPT
     print(year)
 
     # read csv as a data array
