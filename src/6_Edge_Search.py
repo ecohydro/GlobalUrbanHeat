@@ -15,6 +15,7 @@
 #   Moved to .py file from .ipynb on 2019.12.31 by Cascade Tuholske
 #
 #   NOTE UPDATE FILE NAME AS NEEDED
+#   NOTE Ran on 2020.02.19 on HI files
 # 
 ##################################################################################
 
@@ -26,8 +27,8 @@ import matplotlib.pyplot as plt
 
 # Dir and FN
 DATA_PROCESSED = '/home/cascade/projects/UrbanHeat/data/processed/'
-FN_IN = DATA_PROCESSED+"All_data_Raw406.csv" # SET
-FN_OUT = DATA_PROCESSED+"All_data_Raw406_es.csv" # SET
+FN_IN = DATA_PROCESSED+"All_data_HI406.csv" # SET
+FN_OUT = DATA_PROCESSED+"All_data_HI406_es.csv" # SET
 tmax = 40.6 # UPDATE
 df = pd.read_csv(FN_IN)
 
