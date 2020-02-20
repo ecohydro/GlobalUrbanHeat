@@ -1,10 +1,16 @@
-# Program finds the areal averaged TMax from CHIRTSMax Data and a raster with polygon IDS burned
-# Designed to run through a file list in parallel for a dir structured by year
+########################################
+#
+#   Program finds the areal averaged TMax and realitive humidity
+#   UCSB CHC CHIRTS Data and a raster with polygon IDS burned (GHS-UCDB)
+#   Designed to run through a file list in parallel for a dir structured by year
 # 
-# By Cascade Tuholske 2019-08-20
-
-# Last run on realitive humidity ... I think CPT 2020.02.17
-
+#   By Cascade Tuholske 2019-08-20
+#
+#   Last run on realitive humidity ... I think CPT 2020.02.17
+#
+#
+#   Will need to be run on realitive humidity and Tmax from CHS to make HI 
+#
 ########################################
 # 
 #   HEY <<<<<<<<<<< -------- HEY LOOK HERE! 
@@ -45,7 +51,7 @@ from multiprocessing import Pool
 # DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # # TONG FIRE
-# DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/' # <<--- path to 
+# DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/' # <<--- path to run 
 # DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
 
 # Added to do relative humitidy on 2020.01.16

@@ -20,6 +20,8 @@
 #
 #   This come from cpt_tmax_stats_final notebook and was adapated on 2019.12.31 to .py
 #
+#   Was run on 2020.02.19 on HI data  ... w/ errors <<<<<---- UPDATE CPT as it gets fixed 
+#
 #################################################################################
 
 #### Dependencies
@@ -40,34 +42,34 @@ import time
 
 #### 1 Function turns csv into x-array
 def csv_to_xr(file_in, time_dim, space_dim):
-
+    
     """ Function reads in a csv w/ GHS-UCDB IDs and temp, isolates the temp
     and returns a xarray data array with dims set to city ids and dates
-
+    
     Args:
         file_in = file name and path
         time_dim = name for time dim as a str ... use date :-)
         space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0)
     """
-
+    
     df = pd.read_csv(file_in) # read the file in as a df
     print(df.shape)
-
+    
     df_id = df[space_dim] # get IDs
-    df_temp = df.iloc[:,3:] # get only temp columns
-    df_temp.index = df_id # set index values
-    df_temp_drop = df_temp.dropna() # Drop cities w/ no temp record
-    print(len(df_temp_drop))
-
-    temp_np = df_temp_drop.to_numpy() # turn temp cols into an np array
-
+    df = df.iloc[:,3:] # get only temp columns
+    df.index = df_id # set index values
+    df_drop = df.dropna() # Drop cities w/ no temp record 
+    print(len(df_drop))
+    
+    arr = df_drop.to_numpy() # turn temp cols into an np array
+    
     # make xr Data Array w/ data as temp and dims as spece (e.g. id)
-
+    
     # Note 2019 09 17 changed to xr.Dataset from xr.Dataarray
-    temp_xr_da = xr.DataArray(temp_np, coords=[df_temp_drop.index, df_temp_drop.columns],
+    xr_da = xr.DataArray(arr, coords=[df_drop.index, df_drop.columns], 
                             dims=[space_dim, time_dim])
-
-    return temp_xr_da
+    
+    return xr_da
 
 #### 2 Function finds all the Tmax Events and writes it to a dateframe w/ dates for each city
 def tmax_days(xarray, Tthresh):
@@ -259,7 +261,7 @@ def stats_parallel(fn):
 
     # Get year for arg for temp_event function
     #year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
-    year = fn.split('GHS-Tmax-DAILY-HEATINDEX_')[1].split('.csv')[0]
+    year = fn.split('GHS-HI-DAILY_')[1].split('.csv')[0] # Updated 2020.02.19 CPT
     print(year)
 
     # read csv as a data array
