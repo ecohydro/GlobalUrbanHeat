@@ -263,7 +263,7 @@ def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
     print('Stats made')
 
     # Save file out
-    #step3.to_csv(fn_out)
+    step3.to_csv(fn_out)
     
     return step3
 
@@ -281,5 +281,8 @@ time_dim = 'date'
 Tthresh = 40.6
 fn_out = DATA_OUT+'All_data_HI406.csv'
 
-## run it 
+## run it
+start = time.time()
 runit = run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out)
+end = time.time()
+print('time took ', end - start)
