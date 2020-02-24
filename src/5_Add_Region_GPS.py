@@ -31,9 +31,14 @@ countries = pd.read_csv('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/da
 print(events.head())
 
 # Fix Ivory Coast
-events.CTR_MN_NM = events.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast')
+#events.CTR_MN_NM = events.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') #CPT 2020.02.23
 
 #### Merge Events and Countries
+ghs_countries = pd.DataFrame()
+ghs_countries['CTR_MN_NM'] = ghs['CTR_MN_NM']
+ghs_countries['ID_HDC_G0'] = ghs['ID_HDC_G0']
+events = events.merge(ghs_countries, on = 'ID_HDC_G0', how = 'inner')
+events.CTR_MN_NM = events.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') 
 
 # make a region dataframe of the cols we want
 regions = pd.DataFrame()
