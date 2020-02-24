@@ -14,9 +14,9 @@ import numpy as np
 
 #### Args
 DATA_IN = "/home/cascade/projects/UrbanHeat/data/" 
-FN_STATS = ''
+FN_STATS = 'processed/All_data_HI406_meta.csv'
 FN_POP = 'interim/GHS-UCDB-Interp.csv'
-FN_OUT = ''
+FN_OUT = DATA_IN+'processed/All_data_HI406_figdata.csv'
 scale = 10**9 # divide total people days for each city-year pair
 
 #### Functions
@@ -118,11 +118,11 @@ def add_years(df):
 
 #### run it 
 stats = pd.read_csv(DATA_IN+FN_STATS) # read in stats
-df_pop = pd.read_csv(DATA_IN+FN_pop) # read in interp population from GHS-UCDB
+df_pop = pd.read_csv(DATA_IN+FN_POP) # read in interp population from GHS-UCDB
 
 step1 = group_stats(stats)
-step2 = make(step1, df_pop, scale)
-step3 = add_years(step3)
+step2 = make_pdays(step1, df_pop, scale)
+step3 = add_years(step2)
 
 # Save it out
 step3.to_csv(FN_OUT)
