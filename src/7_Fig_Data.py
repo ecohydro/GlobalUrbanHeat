@@ -17,7 +17,10 @@ DATA_IN = "/home/cascade/projects/UrbanHeat/data/"
 FN_STATS = 'processed/All_data_HI406_meta.csv'
 FN_POP = 'interim/GHS-UCDB-Interp.csv'
 FN_OUT = DATA_IN+'processed/All_data_HI406_figdata.csv'
-scale = 10**9 # divide total people days for each city-year pair
+
+#### Re rane on 2020.03.06 with scale set to 1
+scale = 1
+#scale = 10**9 # divide total people days for each city-year pair
 
 #### Functions
 
@@ -68,7 +71,7 @@ def make_pdays(df_stats, df_pop, scale):
     # Calc p days = total days i * pop i 
     pdays_merge['people_days'] = pdays_merge['total_days'] * pdays_merge['P'] / scale # total people days
     
-    # Pdays due to heat increase = total days i - pop 83 - (total days 83 - pop 83) <<-- back out when graphing
+    # Pdays due to heat increase = total days total days >40.6 / yr * Pop in 1983
     pdays_merge['people_days_heat'] = pdays_merge['total_days'] * pdays_merge['P1983'] / scale # people days w/ pop con
     
     # Pdays due to pop increase = total days i * (pop i - pop 83)
