@@ -35,16 +35,6 @@ import multiprocessing as mp
 from glob import glob
 from multiprocessing import Pool
 
-# LOCAL Test
-# DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
-# DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
-# DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
-
-# TANA FIRE
-# DATA_IN = '/home/cascade/tana-spin-cascade/projects/UrbanTempData/CHTSMax_Monthly/' # <<--- path to loop through
-# DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/processed/'
-# DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/'
-
 # TONG TEST
 # DATA_IN = '/home/cascade/projects/UrbanHeat/data/test_in/' # <<--- path to loop through
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/test_out/'
@@ -59,15 +49,19 @@ from multiprocessing import Pool
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/RH-GHS-DIALY/'
 
 # ERA5 CHIRTS DAILY Tmax Run
-DATA_IN = '/home/CHIRTS/Tmax/v1.0/daily_ERA5/'
-DATA_OUT = ''
+# DATA_IN = '/home/CHIRTS/Tmax/v1.0/daily_ERA5/'
+# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
+
+# ERA5 CHIRTS DAILY Tmax Run
+DATA_IN = '/home/CHIRTS/daily_ERA5/'
+DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
 
 # Always use keep the same 
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
-DATA = 'Tmax.'
-FN_OUT = 'GHS-ERA5-Tmax'
+DATA = 'RH.' #'Tmax.'
+FN_OUT = 'GHS-ERA5-RH' #Tmax'
 
 
 # Loop through dirs in //
