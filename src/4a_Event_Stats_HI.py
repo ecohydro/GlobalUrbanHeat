@@ -40,6 +40,17 @@ import multiprocessing as mp
 from multiprocessing import Pool
 import time
 
+# Dirs and FN Names
+DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # interim data
+DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_HI/'
+DIR_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_STATS/' # write out files
+FN_IN = 'GHS-ERA5-HI_'
+FN_OUT = 'GHS-ERA5-Stats_'
+time_dim = 'date'
+space_dim = 'ID_HDC_G0'
+Tthresh = 40.6
+
+
 #### 1 Function turns csv into x-array
 def csv_to_xr(file_in, time_dim, space_dim):
     
@@ -137,7 +148,7 @@ def event_split(dates, ID_HDC_G0, intensity, tmax, total_days):
 
     # city id
     city_id = ID_HDC_G0
-    tot_days = total_days
+    tot_days = total_days # total days >Tmax per year for each city
 
     # lists to fill
     city_id_list = []
@@ -217,7 +228,6 @@ def tmax_stats(df_in):
     """
     df_out = pd.DataFrame()
 
-
     # NOTE - If you add arguments to event_split to make more stats,
     # be sure to update this function
 
@@ -261,7 +271,7 @@ def stats_parallel(fn):
 
     # Get year for arg for temp_event function
     #year = fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
-    year = fn.split('GHS-HI-DAILY_')[1].split('.csv')[0] # Updated 2020.02.19 CPT
+    year = fn.split(FN_IN)[1].split('.csv')[0] # Updated 2020.02.19 CPT
     print(year)
 
     # read csv as a data array
@@ -276,24 +286,14 @@ def stats_parallel(fn):
     # merge to get countries
     ghs_ids_df_out = ghs_ids_df.merge(df_out, on='ID_HDC_G0', how = 'inner')
     # write it all out
-    ghs_ids_df_out.to_csv(dir_out+fn_out+year+'.csv')
+    ghs_ids_df_out.to_csv(DIR_OUT+FN_OUT+year+'.csv')
 
     print(year, 'SAVED!')
 
 #### Run Code
 
-# Dirs and FN Names
-DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/' # interim data
-dir_in = DATA_INTERIM+'CHIRTS-GHS-DAILY-HI/' # output from avg temp
-
-dir_out = DATA_INTERIM+'CHIRTS-GHS-HI-Events-Stats/'
-fn_out = 'CHIRTS-GHS-HI-Events-Stats'
-time_dim = 'date'
-space_dim = 'ID_HDC_G0'
-Tthresh = 40.6
-
 # Git File list
-fn_list = glob.glob(dir_in+'*.csv')
+fn_list = glob.glob(DIR_HI+'*.csv')
 
 # Execute code
 print('STARTING LOOP')

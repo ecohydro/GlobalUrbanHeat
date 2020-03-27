@@ -30,11 +30,15 @@ import julian
 import math
 
 #### DIR PATHS & Arguments
-DIR_Tmax = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS-GHS-DAILY-Tmax/'
-DIR_RH = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS-GHS-DAILY-RH/'
-DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS-GHS-DAILY-HI/'
+DIR_Tmax = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
+DIR_RH = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
+DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_HI/'
 unit_in = 'C'
 unit_out = 'C'
+
+FN_RH_IN = 'GHS-ERA5-RH_' # name of RH file in
+FN_Tmax_IN = 'GHS-ERA5-Tmax_' # name of Tmax file in
+FN_OUT = 'GHS-ERA5-HI_' # name for files out
 
 #### Functions 
 def C_to_F(Tmax_C):
@@ -168,9 +172,9 @@ def apply_heatindex(DIR_Tmax, DIR_RH, DIR_HI, unit_in, unit_out):
     for Tmax_fn, RH_fn in zip(sorted(Tmax_fn_list),sorted(RH_fn_list)):
     
         # Check the years RH and Tmax 
-        Tmax_year = Tmax_fn.split('GHS-Tmax-DAILY_')[1].split('.csv')[0]
-        print('Tmax year is ',Tmax_year)
-        RH_year = RH_fn.split('GHS-Tmax-RH_')[1].split('.csv')[0]
+        Tmax_year = Tmax_fn.split(FN_Tmax_IN)[1].split('.csv')[0] 
+        print('Tmax year is ', Tmax_year)
+        RH_year = RH_fn.split(FN_RH_IN)[1].split('.csv')[0] 
         print('RH year is ', RH_year)
 
         # Read csv as x-array
@@ -188,7 +192,7 @@ def apply_heatindex(DIR_Tmax, DIR_RH, DIR_HI, unit_in, unit_out):
         hi_df = hi.to_pandas()
         #hi_df['ID_HDC_G0'] = hi_df.index
         df_out = df_out.merge(hi_df, on = 'ID_HDC_G0', how = 'inner')
-        df_out_nm = 'GHS-HI-DAILY_'+Tmax_year+'.csv'
+        df_out_nm = FN_OUT+Tmax_year+'.csv' 
         df_out.to_csv(DIR_HI+df_out_nm)
         print(RH_year, ' done \n')
     
