@@ -21,8 +21,8 @@ import geopandas as gpd
 #### Load Files
 
 DATA_PROCESSED = '/home/cascade/projects/UrbanHeat/data/processed/'
-FN_IN = DATA_PROCESSED+"All_data_HI406.csv" # SET
-FN_OUT = DATA_PROCESSED+"All_data_HI406_meta.csv" # SET
+FN_IN = DATA_PROCESSED+"AllDATA-GHS-ERA5-HI406.csv" # SET
+FN_OUT = DATA_PROCESSED+"AllDATA-GHS-ERA5-HI406-META.csv" # SET
 
 events = pd.read_csv(FN_IN)
 ghs = gpd.read_file('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp')
@@ -33,11 +33,11 @@ print(events.head())
 # Fix Ivory Coast
 #events.CTR_MN_NM = events.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') #CPT 2020.02.23
 
-#### Merge Events and Countries
-ghs_countries = pd.DataFrame()
-ghs_countries['CTR_MN_NM'] = ghs['CTR_MN_NM']
-ghs_countries['ID_HDC_G0'] = ghs['ID_HDC_G0']
-events = events.merge(ghs_countries, on = 'ID_HDC_G0', how = 'inner')
+#### Merge Events and Countries <<<--- 2020.03.30 commented out by CPT, not needed
+# ghs_countries = pd.DataFrame()
+# ghs_countries['CTR_MN_NM'] = ghs['CTR_MN_NM']
+# ghs_countries['ID_HDC_G0'] = ghs['ID_HDC_G0']
+# events = events.merge(ghs_countries, on = 'ID_HDC_G0', how = 'inner')
 events.CTR_MN_NM = events.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') 
 
 # make a region dataframe of the cols we want
@@ -55,7 +55,6 @@ print(len(events))
 print(events.head())
 
 #### Add lat/lon of GHS-UCDB to events
-
 # get GHS-UCDB lat/long
 df = pd.DataFrame()
 df['ID_HDC_G0'] = ghs['ID_HDC_G0']
@@ -67,7 +66,7 @@ events = events.merge(df, on = 'ID_HDC_G0', how = 'inner')
 
 print(events.head())
 
-# save out file
+# save out file 
 events.to_csv(FN_OUT)
 
 #################################################################################

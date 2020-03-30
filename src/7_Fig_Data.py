@@ -14,9 +14,9 @@ import numpy as np
 
 #### Args
 DATA_IN = "/home/cascade/projects/UrbanHeat/data/" 
-FN_STATS = 'processed/All_data_HI406_meta.csv'
+FN_STATS = 'processed/AllDATA-GHS-ERA5-HI406-META.csv'
 FN_POP = 'interim/GHS-UCDB-Interp.csv'
-FN_OUT = DATA_IN+'processed/All_data_HI406_figdata.csv'
+FN_OUT = DATA_IN+'processed/AllDATA-GHS-ERA5-HI406-FIGDATA.csv'
 
 #### Re rane on 2020.03.06 with scale set to 1
 scale = 1
@@ -24,15 +24,23 @@ scale = 1
 
 #### Functions
 
-def group_stats(df):
-    "function groups event stats to calc total Tmax days per year for each city"
+# def group_stats(df):
+#     "function groups event stats to calc total Tmax days per year for each city"
     
-    total_days = df.groupby(['year', 'ID_HDC_G0'])['duration'].sum() # group by city and year
-    total_days_df = pd.DataFrame(total_days).reset_index() # reset the index
-    total_days_df.rename({'duration': 'total_days'}, axis=1, inplace=True) # rename column 
+#     total_days = df.groupby(['year', 'ID_HDC_G0'])['duration'].sum() # group by city and year
+#     total_days_df = pd.DataFrame(total_days).reset_index() # reset the index
+#     total_days_df.rename({'duration': 'total_days'}, axis=1, inplace=True) # rename column 
 
-    return total_days_df
+#     return total_days_df
 
+
+def df_drop(df, cols):
+    "function takes data frame and drops duplicates based on a column, takes list of cols"
+    df_out = pd.DataFrame()
+    df_out = df.drop_duplicates(cols)
+    
+    return df_out
+    
 def make_pdays(df_stats, df_pop, scale):
     
     """  Makes a dataframe with Tmax stats and population to calc people days.
@@ -43,7 +51,6 @@ def make_pdays(df_stats, df_pop, scale):
         scale = if you want to divide the data ... 10**9 is best for global scale
     """
     
- 
     # Make Population Long Format
     pop_long = pd.wide_to_long(df_pop, stubnames = 'P', i = 'ID_HDC_G0', j = 'year')
     pop_long.reset_index(level=0, inplace=True)
@@ -123,9 +130,15 @@ def add_years(df):
 stats = pd.read_csv(DATA_IN+FN_STATS) # read in stats
 df_pop = pd.read_csv(DATA_IN+FN_POP) # read in interp population from GHS-UCDB
 
-step1 = group_stats(stats)
+#### CPT 2020.30.30 I don't think step 1 in needed with the new work flow
+cols = ('ID_HDC_G0', 'year') # drop duplicate city & year combos for pdays
+step1 = df_drop(stats, cols)
 step2 = make_pdays(step1, df_pop, scale)
 step3 = add_years(step2)
+
+# step1 = group_stats(stats) 
+# step2 = make_pdays(step1, df_pop, scale)
+# step3 = add_years(step2)
 
 # Save it out
 step3.to_csv(FN_OUT)
