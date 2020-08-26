@@ -6,10 +6,9 @@
 # 
 #   By Cascade Tuholske 2019-08-20
 #
-#   Last run on realitive humidity ... I think CPT 2020.02.17
-#
-#
 #   Will need to be run on realitive humidity and Tmax from CHS to make HI 
+#
+#   NOTE: Running on ERA-5 RH 2020.08.26 by CPT - /home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2
 #
 ########################################
 # 
@@ -53,8 +52,11 @@ from multiprocessing import Pool
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
 
 # ERA5 CHIRTS DAILY Tmax Run
-DATA_IN = '/home/CHIRTS/daily_ERA5/'
+# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2)
+DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2/'
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
+
+/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2
 
 # Always use keep the same 
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
