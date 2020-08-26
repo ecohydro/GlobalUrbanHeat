@@ -35,16 +35,6 @@ import multiprocessing as mp
 from glob import glob
 from multiprocessing import Pool
 
-# LOCAL Test
-# DATA_IN = '/Users/cascade/Github/UrbanHeat/data/test_in/' # <<--- path to loop through
-# DATA_OUT = '/Users/cascade/Github/UrbanHeat/data/test_out/'
-# DATA_INTERIM = '/Users/cascade/Github/UrbanHeat/data/interim/'
-
-# TANA FIRE
-# DATA_IN = '/home/cascade/tana-spin-cascade/projects/UrbanTempData/CHTSMax_Monthly/' # <<--- path to loop through
-# DATA_OUT = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/processed/'
-# DATA_INTERIM = '/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/interim/'
-
 # TONG TEST
 # DATA_IN = '/home/cascade/projects/UrbanHeat/data/test_in/' # <<--- path to loop through
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/test_out/'
@@ -55,10 +45,24 @@ from multiprocessing import Pool
 # DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
 
 # Added to do relative humitidy on 2020.01.16
-DATA_IN = '/home/CHIRTS/daily/'
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/RH-GHS-DIALY/'
+# DATA_IN = '/home/CHIRTS/daily/'
+# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/RH-GHS-DIALY/'
 
+# ERA5 CHIRTS DAILY Tmax Run
+# DATA_IN = '/home/CHIRTS/Tmax/v1.0/daily_ERA5/'
+# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
+
+# ERA5 CHIRTS DAILY Tmax Run
+DATA_IN = '/home/CHIRTS/daily_ERA5/'
+DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
+
+# Always use keep the same 
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
+
+# DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
+DATA = 'RH.' #'Tmax.'
+FN_OUT = 'GHS-ERA5-RH' #Tmax'
+
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -76,8 +80,8 @@ def temp_ghs(dir_nm):
 
     # Set fn out, change as needed 
     # fn_out = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
-    fn_out = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
-
+    # fn_out = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
+    fn_out = FN_OUT
     
     # Turn polyRst data as Xarray, 
     polyRst_da = xr.DataArray(polyRst.read(1), dims = ['y', 'x'])
@@ -89,10 +93,10 @@ def temp_ghs(dir_nm):
         dir_year = dir_nm.split(DATA_IN)[1].split('/')[0]
 
         # find all the tif files
-        if fn.startswith('RH'):        # UPDATED FOR Tmax FTP 2019-08-29 ... NEED TO Make BETTER
+        if fn.startswith(DATA):        
 
             # Get the date of each chirt file
-            date = (fn.split('RH.')[1].split('.tif')[0]) # <<<< ------ ALWAYS UPDATE
+            date = (fn.split(DATA)[1].split('.tif')[0]) 
             print(dir_year)
             print(date)
 
@@ -154,6 +158,10 @@ def parallel_loop(function, dir_list, cpu_num):
 
 # Get dir list
 dir_list= sorted(glob(DATA_IN+'*/'))
+print(dir_list)
+
+# For ERA5 Dir 
+dir_list = dir_list[:-1]
 print(dir_list)
 
 # set number of cores to use
