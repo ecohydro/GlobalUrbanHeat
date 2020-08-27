@@ -56,15 +56,14 @@ from multiprocessing import Pool
 DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2/'
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
 
-/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2
-
 # Always use keep the same 
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
 DATA = 'RH.' #'Tmax.'
 FN_OUT = 'GHS-ERA5-RH' #Tmax'
-
+# FN_OUT = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
+# FN_OUT = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -81,8 +80,6 @@ def temp_ghs(dir_nm):
     polyRst = rasterio.open(DATA_INTERIM+polyRst_fn)
 
     # Set fn out, change as needed 
-    # fn_out = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
-    # fn_out = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
     fn_out = FN_OUT
     
     # Turn polyRst data as Xarray, 

@@ -141,6 +141,10 @@ step3 = add_years(step2)
 # step3 = add_years(step2)
 
 # Save it out
+print('starting step 7')
 step3.to_csv(FN_OUT)
+print('end step 7')
+
+
 
 
