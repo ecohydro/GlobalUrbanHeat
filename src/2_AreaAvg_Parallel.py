@@ -1,14 +1,14 @@
 ########################################
 #
 #   Program finds the areal averaged TMax and realitive humidity
-#   UCSB CHC CHIRTS Data and a raster with polygon IDS burned (GHS-UCDB)
+#   UCSB CHC CHIRTS Data or ERA-5 RH and a raster with polygon IDS burned (GHS-UCDB)
 #   Designed to run through a file list in parallel for a dir structured by year
 # 
 #   By Cascade Tuholske 2019-08-20
 #
 #   Will need to be run on realitive humidity and Tmax from CHS to make HI 
 #
-#   NOTE: Running on ERA-5 RH 2020.08.26 by CPT - /home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2
+#   NOTE: Running on ERA-5 RH 2020.09.03 by CPT - /home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/
 #
 ########################################
 # 
