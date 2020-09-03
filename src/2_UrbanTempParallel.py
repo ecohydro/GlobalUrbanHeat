@@ -53,7 +53,7 @@ from multiprocessing import Pool
 
 # ERA5 CHIRTS DAILY Tmax Run
 # DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2)
-DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2/'
+DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/'
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
 
 # Always use keep the same 
@@ -156,7 +156,7 @@ def parallel_loop(function, dir_list, cpu_num):
     print(end-start)
 
 # Get dir list
-dir_list= sorted(glob(DATA_IN+'*/'))
+dir_list = sorted(glob(DATA_IN+'*/'))
 print(dir_list)
 
 # For ERA5 Dir 
