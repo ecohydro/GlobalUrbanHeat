@@ -14,4 +14,4 @@ Step 4 can be done in two ways:
 	    specific. You will then need to use 4b_Event_Stack_HI.py to stack the files
         before running 5_Add_Region_GPS.py
         
-        -- 2020.08.27 Use 4a & 4b for analysis CPT.
+        -- 2020.08.27 Use 4a & 4b for first global exposure urban-heat paper analysis CPT.
