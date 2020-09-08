@@ -34,25 +34,12 @@ import multiprocessing as mp
 from glob import glob
 from multiprocessing import Pool
 
-# TONG TEST
-# DATA_IN = '/home/cascade/projects/UrbanHeat/data/test_in/' # <<--- path to loop through
-# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/test_out/'
-# DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
-
-# # TONG FIRE
-# DATA_IN = '/home/chc-data-out/products/Tmax_monthly/MERRA2_adjusted_Tmax-Tmin_daily/' # <<--- path to run 
-# DATA_OUT = '/home/cascade/projects/data_out/CHIRTS-GHS-DAILY/'
-
-# Added to do relative humitidy on 2020.01.16
-# DATA_IN = '/home/CHIRTS/daily/'
-# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/RH-GHS-DIALY/'
-
 # ERA5 CHIRTS DAILY Tmax Run
 # DATA_IN = '/home/CHIRTS/Tmax/v1.0/daily_ERA5/'
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
 
-# ERA5 CHIRTS DAILY Tmax Run
-# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2)
+# ERA5 CHIRTS DAILY RH Run
+# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2 RH)
 DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/'
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
 
@@ -104,6 +91,7 @@ def temp_ghs(dir_nm):
 
             # Make arrays into x    array DataArray
             tempRst_da = xr.DataArray(tempRst.read(1), dims = ['y', 'x']) # y and x are our 2-d labels
+            tempRst_da.data[np.isnan(tempRst_da.data)] = -9999 # CPT 2020.09.03 <<<<<<----------------- only for ERA5 RH
 
             # Make xarray dataset
             ds = xr.Dataset(data_vars = 
@@ -112,7 +100,7 @@ def temp_ghs(dir_nm):
 
             # UPDATED 2019-08-19 Mask the CHIRTS PIXELS FIRST, THEN GHS
             # Mask values from chirt that are ocean in ghs and chirt in our ds 
-            ds_mask = ds.where(ds.temp != -9999, drop = False) #<<<<------ need to double check this
+            ds_mask = ds.where(ds.temp != -9999, drop = False) 
 
             # Mask pixels for both ghs and chirts where ghs cities are not present
             ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False)
@@ -134,8 +122,9 @@ def temp_ghs(dir_nm):
 
             # merge the df
             ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer')
-
-    ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
+            
+            # CPT 2020.09.04 Try writing csv as we go <<<<----- Test
+            ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
     print('DONE ! ! !')
 
 # start pools
