@@ -7,10 +7,7 @@
 #   A notebook to subset Tmax daily for the 13000 GHS urban areas to identify dates >40c, consecuritve days >40 c etc.
 #   Modified from 4_Tmax_Stats.py in oldcode dir
 #
-#   NOTE: Fully rewriten on 2021.02.01 see 'oldcode' for prior version / CPT
-#   This finds all events 1 day or longer w/ HI > 40.6C. We'll use a second
-#   Script to sub-set it for 115 and 2 day events
-#
+#   Run on 2020.02.23
 #
 #################################################################################
 
@@ -266,7 +263,7 @@ def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
     print('Stats made')
 
     # Save file out
-    step3.to_json(fn_out, orient = 'split')
+    step3.to_csv(fn_out)
     
     return step3
 
@@ -276,13 +273,13 @@ def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
 #### RUN IT #########################################################
 
 ## Arges Needed 
-DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # output from avg temp
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/STATS_1DAY406/'
+DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS-GHS-DAILY-HI/' # output from avg temp
+DATA_OUT = '/home/cascade/projects/UrbanHeat/data/processed/'
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
 Tthresh = 40.6
-fn_out = DATA_OUT+'STATS_1DAY406.json'
+fn_out = DATA_OUT+'All_data_HI406.csv'
 
 ## run it
 start = time.time()
