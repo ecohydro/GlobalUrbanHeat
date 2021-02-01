@@ -40,15 +40,15 @@ from multiprocessing import Pool
 
 # ERA5 CHIRTS DAILY RH Run
 # DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2 RH)
-DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/'
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
+DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/' # This is the good RH data from CHC
+DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS/CHIRTS_DAILY/RH'# Updated path for organization 2021.02.01 CPT
 
 # Always use keep the same 
 DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
 
 # DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
 DATA = 'RH.' #'Tmax.'
-FN_OUT = 'GHS-ERA5-RH' #Tmax'
+FN_OUT = 'GHS-RH' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
 # FN_OUT = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
 # FN_OUT = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
 
