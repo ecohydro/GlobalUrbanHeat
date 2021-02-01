@@ -277,7 +277,7 @@ def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
 
 ## Arges Needed 
 DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # output from avg temp
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/STATS_1DAY406/'
+DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/STATS/'
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
