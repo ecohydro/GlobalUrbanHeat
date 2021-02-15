@@ -1,16 +1,13 @@
 ##################################################################################
 #
-#   TMAX FINAL STATS
 #   By Cascade Tuholske on 2019.12.31
 #   Updated 2020.02.23
 #
-#   A notebook to subset Tmax daily for the 13000 GHS urban areas to identify dates >40c, consecuritve days >40 c etc.
 #   Modified from 4_Tmax_Stats.py in oldcode dir
 #
 #   NOTE: Fully rewriten on 2021.02.01 see 'oldcode' for prior version / CPT
-#   This finds all events 1 day or longer w/ HI > 40.6C. We'll use a second
-#   Script to sub-set it for 115 and 2 day events
-#
+#   
+#   These are the functions need for 4_Event_Stats_Run.py
 #
 #################################################################################
 
@@ -30,7 +27,7 @@ import multiprocessing as mp
 from multiprocessing import Pool
 import os
 
-#### Step 1 - Function Loads all Tmax Data as an X-array
+#### Function Loads all Tmax Data as an X-array
 def read_data(dir_path, space_dim, time_dim):
     """ Function reads in all Tmax .csv files, joins them by date along the x-axis
     and returns the whole record as a x-array data array
@@ -72,8 +69,8 @@ def read_data(dir_path, space_dim, time_dim):
                              dims=[space_dim, time_dim])
     return tmax_xr_da
 
-#### Step 2 Function finds all the Tmax Events and writes it to a dateframe w/ dates for each city
-def tmax_days(xarray, Tthresh):
+#### Function finds all the Tmax Events and writes it to a dateframe w/ dates for each city
+def max_days(xarray, Tthresh):
     """ Function finds all the tmax days in a year and sums total days per year 
     greater than a threshold within a year where Tmax > Tthresh for each city. Returns the total number of days,
     the dates, the tempatures, and the intensity (daily Tmax - Tthresh)
@@ -114,7 +111,7 @@ def tmax_days(xarray, Tthresh):
     # return df_out
     return df_out
 
-#### Step 3 Function splits the dataset into Tmax events (continuous days >Tmax) for each city
+#### Function splits the dataset into Tmax events (continuous days >Tmax) for each city
 def jul_convert(dates):
     "Function turn days into julian datetime"
     jul_days = pd.to_datetime(dates).to_julian_date()
@@ -176,7 +173,7 @@ def event_split(dates, ID_HDC_G0, intensity, tmax): #, total_days): #CPT 2020.02
         temp = tmax[start:end] # temp of each day during event
         avg_temp = mean(temp) # avg. temp during event
         avg_int = mean(intense) # avg. intensity during event
-        tot_int = intense.sum() # total intensity during event
+        tot_int = np.sum(intense) # total intensity during event
         
         start = counter # reset start to current end (e.g. counter)
         year = event_dates[0].split('.')[0]
@@ -208,9 +205,9 @@ def event_split(dates, ID_HDC_G0, intensity, tmax): #, total_days): #CPT 2020.02
 
     return df_out
 
-#### Step 4 function feeds output from function 3 into function 4
-def tmax_stats(df_in):
-    """ runs event_split functionon a dataframe to produce desired tmax stats
+#### Function feeds output from function 3 into function 4
+def max_stats(df_in):
+    """ runs event_split functionon a dataframe to produce desired threshold max stats
 
         NOTE - If you add arguments to event_split to make more states,
         be sure to update this function
@@ -236,56 +233,83 @@ def tmax_stats(df_in):
 
     return df_out
 
-#### Step 5 function threads it all together
-def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
+#### Function to run tmax_stats on for parallel processing
+def max_stats_run(fn):
     
-    """ Function ties all the Tmax Stats functions together and writes final stats for each Tmax 
-    event to a .csv file. Returns results as a dataframe if needed
-    
+    """ runs max_stats on a fn (.json) and writes on .json)
     Args:
-        dir_path = path to .csv files 
-        time_dim = name for time dim as a str ... use date :-)
-        space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0)
-        Tthresh = float of temp threshold
-        fn_out = file and path to write final csv
-        
+        fn = file name
+        data = data to split file names up with 
     """
     
-    # read in data
-    step1= read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
-    #step1_sub = step1[:,:10] # subset data for testing
-    print('Stack x-array made')
-    
-    # Mask data based on Tmax threshold ... we're using 40.6C
-    step2 = tmax_days(step1, Tthresh)
-    print('Tmax masked')
-    
+    # open df & get names
+    df = pd.read_json(fn, orient = 'split')
+    data = fn.split('_temp/')[1].split('_')[0]
+    i = fn.split(data+'_temp/')[1].split(data+'_')[1]
+    out_path = fn.split(data+'_temp')[0]
+
+    # make small for testing 
+    df = df.iloc[0:4,:]
     
     # Calculate stats
-    step3 = tmax_stats(step2)
-    print('Stats made')
+    df_out = max_stats(df)
 
-    # Save file out
-    step3.to_json(fn_out, orient = 'split')
+    # write file
+    fn_out = out_path+data+'_temp/'+data+'_STAT_'+i
+    df_out.to_json(fn_out, orient = 'split')
     
-    return step3
+    print('done', i)
 
-    print('done')
+#### Run a parellel process 
+def parallel_loop(function, dir_list, cpu_num):
+    """Run the temp-ghs routine in parallel
+    Args: 
+        function = function to apply in parallel
+        dir_list = list of dir or fns to loop through 
+        cpu_num = numper of cpus to fire  
+    """ 
+    start = time.time()
+    pool = Pool(processes = cpu_num)
+    pool.map(function, dir_list)
+    # pool.map_async(function, dir_list)
+    pool.close()
 
+    end = time.time()
+    print(end-start)
+    
+    
+#### Function threads it all together
+# def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
+    
+#     """ Function ties all the Tmax Stats functions together and writes final stats for each Tmax 
+#     event to a .csv file. Returns results as a dataframe if needed
+    
+#     Args:
+#         dir_path = path to .csv files 
+#         time_dim = name for time dim as a str ... use date :-)
+#         space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0)
+#         Tthresh = float of temp threshold
+#         fn_out = file and path to write final csv
+        
+#     """
+    
+#     # read in data
+#     step1= read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
+#     #step1_sub = step1[:,:10] # subset data for testing
+#     print('Stack x-array made')
+    
+#     # Mask data based on Tmax threshold ... we're using 40.6C
+#     step2 = tmax_days(step1, Tthresh)
+#     print('Tmax masked')
+    
+    
+#     # Calculate stats
+#     step3 = tmax_stats(step2)
+#     print('Stats made')
 
-#### RUN IT #########################################################
+#     # Save file out
+#     step3.to_json(fn_out, orient = 'split')
+    
+#     return step3
 
-## Arges Needed 
-DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # output from avg temp
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/STATS/'
-dir_path = DATA_IN 
-space_dim = 'ID_HDC_G0'
-time_dim = 'date'
-Tthresh = 40.6
-fn_out = DATA_OUT+'STATS_1DAY406.json'
-
-## run it
-start = time.time()
-runit = run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out)
-end = time.time()
-print('time took ', end - start)
+#     print('done')
