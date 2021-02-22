@@ -205,7 +205,7 @@ def event_split(dates, ID_HDC_G0, intensity, tmax): #, total_days): #CPT 2020.02
 
     return df_out
 
-#### Function feeds output from function 3 into function 4
+#### Function feeds output from max_days into event_split
 def max_stats(df_in):
     """ runs event_split functionon a dataframe to produce desired threshold max stats
 
@@ -241,28 +241,30 @@ def max_stats_run(fn):
         fn = file name
         data = data to split file names up with 
     """
+    print(mp.current_process())
     
     # open df & get names
+    
     df = pd.read_json(fn, orient = 'split')
-    data = fn.split('_temp/')[1].split('_')[0]
-    i = fn.split(data+'_temp/')[1].split(data+'_')[1]
-    out_path = fn.split(data+'_temp')[0]
+    data = fn.split('_tmp/')[1].split('_')[0]
+    i = fn.split(data+'_tmp/')[1].split(data+'_')[1]
+    out_path = fn.split(data+'_tmp')[0]
 
-    # make small for testing 
-    df = df.iloc[0:4,:]
+    # make small for testing # CPT Feb 2021 --- Un comment this below for testing the code
+    # df = df.iloc[0:4,:]
     
     # Calculate stats
     df_out = max_stats(df)
 
     # write file
-    fn_out = out_path+data+'_temp/'+data+'_STAT_'+i
+    fn_out = out_path+data+'_tmp/'+data+'_STAT_'+i
     df_out.to_json(fn_out, orient = 'split')
     
     print('done', i)
 
 #### Run a parellel process 
 def parallel_loop(function, dir_list, cpu_num):
-    """Run the temp-ghs routine in parallel
+    """Run the a function in parallel
     Args: 
         function = function to apply in parallel
         dir_list = list of dir or fns to loop through 
@@ -276,40 +278,46 @@ def parallel_loop(function, dir_list, cpu_num):
 
     end = time.time()
     print(end-start)
-    
-    
-#### Function threads it all together
-# def run_stats(dir_path, space_dim, time_dim, Tthresh, fn_out):
-    
-#     """ Function ties all the Tmax Stats functions together and writes final stats for each Tmax 
-#     event to a .csv file. Returns results as a dataframe if needed
-    
-#     Args:
-#         dir_path = path to .csv files 
-#         time_dim = name for time dim as a str ... use date :-)
-#         space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0)
-#         Tthresh = float of temp threshold
-#         fn_out = file and path to write final csv
+
+#### Split up max_days df output and save to max_stats_run in parallel
+def df_split(DATA_OUT, data, cpu, df_in):
+    """ Breaks up dataframe max_days into chunks by number of cpu and saves them out in a tmp folder
+    for parallel_loop.
+    Args:
+        DATA_OUT = file path out
+        data = data under study
+        cpu = number of cpus to run loop (e.g. chunk the data)
+        df_in = data frame from max_days (usually called 'step2')
         
-#     """
+    """
     
-#     # read in data
-#     step1= read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
-#     #step1_sub = step1[:,:10] # subset data for testing
-#     print('Stack x-array made')
+    # make a tmp dir to write out 
+    dir_nm = DATA_OUT+data+'_tmp/'
+    print(dir_nm)
+    os.mkdir(dir_nm)
     
-#     # Mask data based on Tmax threshold ... we're using 40.6C
-#     step2 = tmax_days(step1, Tthresh)
-#     print('Tmax masked')
-    
-    
-#     # Calculate stats
-#     step3 = tmax_stats(step2)
-#     print('Stats made')
+    # split them 
+    df_list = np.array_split(df_in, cpu)
 
-#     # Save file out
-#     step3.to_json(fn_out, orient = 'split')
+    # write them out
+    for i, df in enumerate(df_list):
+        df.to_json(dir_nm+data+'_'+str(i)+'.json', orient = 'split')
     
-#     return step3
-
-#     print('done')
+def final_df(fn_pattern, fn_out):
+    """ Takes results of df_split, opens them and concats them. Saves a final json
+    Args:
+        fn_pattern = pattern to find with glob
+        fn_out = final fn path for STATS routine
+    """
+    fn_list = glob.glob(fn_pattern) # get the files
+    
+    # concat them
+    df_list = []
+    for fn in fn_list:
+        df_list.append(pd.read_json(fn, orient = 'split'))
+    df_out = pd.concat(df_list)
+    
+    # add event ids and save out
+    df_out['UID'] = ['UID-'+str(x) for x in list(range(0,len(df_out))) ]
+    df_out.to_json(fn_out, orient = 'split')
+    
