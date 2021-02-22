@@ -28,38 +28,38 @@ Tthresh = 40.6 # update
 data = 'HI406' # HI or WBGT and Threshold
 cpu = 20 # number of cpus to use
 
-# # Step 1 - Read and stack HI or WBGT
-# ####################################################################################################
+# Step 1 - Read and stack HI or WBGT
+####################################################################################################
 
-# step1 = es.read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
-# print('Data stacked')
+step1 = es.read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
+print('Data stacked')
 
-# # Step 2 Mask data based on  threshold
-# ####################################################################################################
+# Step 2 Mask data based on  threshold
+####################################################################################################
 
-# step2 = es.max_days(step1, Tthresh)
-# print('Tmax masked')
+step2 = es.max_days(step1, Tthresh)
+print('Tmax masked')
 
-# # Step 3 Split up step 2 and write the files out
-# ####################################################################################################
-# dir_nm = DATA_OUT+data+'_temp'
-# print(dir_nm)
-# os.mkdir(dir_nm)
+# Step 3 Split up step 2 and write the files out
+####################################################################################################
+dir_nm = DATA_OUT+data+'_tmp'
+print(dir_nm)
+os.mkdir(dir_nm)
 
-# cpu_ = cpu+2 # add two
-# n = int(len(step1)/ cpu_)  #chunk row size
-# list_df = [step2 [i:i+n] for i in range(0,step2.shape[0],n)]
-# print(len(list_df))
+cpu_ = cpu+2 # add two
+n = int(len(step1)/ cpu_)  #chunk row size
+list_df = [step2 [i:i+n] for i in range(0,step2.shape[0],n)]
+print(len(list_df))
 
-# # write them out
-# for i, df in enumerate(list_df):
-#     df.to_json(DATA_OUT+data+'_temp/'+data+'_'+str(i)+'.json', orient = 'split')
+# write them out
+for i, df in enumerate(list_df):
+    df.to_json(DATA_OUT+data+'_temp/'+data+'_'+str(i)+'.json', orient = 'split')
 
 # # Step 4 Run stats in parallel 
 # ####################################################################################################
 
-fns_list = glob(DATA_OUT+data+'_temp'+'/*.json')
-es.parallel_loop(es.max_stats_run, fns_list, cpu_num = 20)
+# fns_list = glob(DATA_OUT+data+'_tmp'+'/*.json')
+# es.parallel_loop(es.max_stats_run, fns_list, cpu_num = 20)
 
 
 

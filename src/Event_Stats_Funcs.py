@@ -7,7 +7,7 @@
 #
 #   NOTE: Fully rewriten on 2021.02.01 see 'oldcode' for prior version / CPT
 #   
-#   These are the functions need for 4_Event_Stats_Run.py
+#   These are the functions needed for 4_Event_Stats_Run.py
 #
 #################################################################################
 
