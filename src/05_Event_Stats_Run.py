@@ -10,6 +10,8 @@
 #   Find heat wave dates, duration, intensity, etc. for a given threshold
 #   with either HI or WBGT data ... can be used on Tmax as well
 #
+#   LOOK FOR "ALWAYS CHECK" and UPDATE
+#
 #################################################################################
 
 # Dependencies
@@ -18,15 +20,15 @@ import os
 from glob import glob
 
 # Arges Needed 
-DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # output from avg temp
+DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # <---- ALWAYS CHECK
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/STATS/'
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
-Tthresh = 40.6 # update
-data = 'HI406' # HI or WBGT and Threshold
+Tthresh = 46.1 # <---------- ALWAYS CHECK
+data = 'HI461' #'HI406' # HI or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
 cpu = 20 # number of cpus to use
-fn_out = '/home/cascade/projects/UrbanHeat/data/processed/PNAS-DATA-v2/'+data+'_STATS.json'# final FN
+fn_out = '/home/cascade/projects/UrbanHeat/data/processed/PNAS-DATA-v2/'+data+'_1D_STATS.json'# final FN - 2-day stats
 
 # Step 1 - Read and stack HI or WBGT
 ####################################################################################################
