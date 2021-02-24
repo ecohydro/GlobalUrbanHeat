@@ -16,8 +16,8 @@ import numpy as np
 
 #### Load Files and FN
 
-ghs = gpd.read_file('/home/cascade/tana-crunch-cascade/projects/UrbanHeat/data/raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp')
-out_fn = '/home/cascade/projects/data_out_urbanheat/GHS-UCDB-Interp.csv'
+ghs = gpd.read_file('/home/cascade/projects/UrbanHeat/data/raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp')
+out_fn = '/home/cascade/projects/UrbanHeat/data/interim/GHS-UCDB-Interp.csv'
 
 # Get Population from GHS
 df_pop = pd.DataFrame()
