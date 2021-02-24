@@ -1,4 +1,10 @@
-###############################################3
+###############################################
+
+UPDATED 2021.02.01 by Cascade Tuholske
+
+Step 4 was simplifed and rewriting to export .json files to perserve lists.
+
+###############################################
 
 By Cascade Tuholske 2020.03.27
 

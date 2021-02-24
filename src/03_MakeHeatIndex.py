@@ -14,6 +14,8 @@
 #       NOAA Heat Index Table(https://www.kjrh.com/weather/weather-blog-what-exaclty-is-the-heat-index) 
 #       simply reds out values where Tmax >40C and RH > 50%. So I guess were are on track ...
 #
+#       Updated 2021.02.01 to have new file paths and names 
+#
 #################################################################################
 
 #### Dependencies
@@ -30,15 +32,15 @@ import julian
 import math
 
 #### DIR PATHS & Arguments
-DIR_Tmax = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
-DIR_RH = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_RH/'
-DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_HI/'
+DIR_Tmax = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/Tmax/'
+DIR_RH = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/RH/'
+DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/'
 unit_in = 'C'
 unit_out = 'C'
 
-FN_RH_IN = 'GHS-ERA5-RH_' # name of RH file in
-FN_Tmax_IN = 'GHS-ERA5-Tmax_' # name of Tmax file in
-FN_OUT = 'GHS-ERA5-HI_' # name for files out
+FN_RH_IN = 'GHS-RH_' # name of RH file in
+FN_Tmax_IN = 'GHS-Tmax_' # name of Tmax file in
+FN_OUT = 'GHS-HI_' # name for files out
 
 #### Functions 
 def C_to_F(Tmax_C):
