@@ -37,7 +37,7 @@ print(len(HI_STATS))
 stats_out = expT.run_OLS(HI_STATS, 'ID_HDC_G0', alpha = 0.05)
 
 #### Add In Meta Data (e.g. geographic data)
-meta_fn = DATA_PATH+'interim/GHS-UCDB-IDS.csv''
+meta_fn = ''
 meta_data = pd.read_csv(DATA_IN+meta_fn)
 
 #### Merge in meta
@@ -49,19 +49,18 @@ pop = pop.drop_duplicates('ID_HDC_G0')
 stats_out_final = stats_out_final.merge(pop, on = 'ID_HDC_G0', how = 'left')
 
 #### Write it out 
-
 ## All data
-fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_ALL.json'
+fn_out = '' # <---- ALWAYS UPDATE
 stats_out_final.to_csv(DATA_IN+fn_out)
 
 ## City-level where pdays is sig at < 0.05
 p95 = stats_out_final[stats_out_final['p_value_pdays'] < 0.05]
-fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_EXPP05.json'
+fn_out = ''
 p95.to_csv(DATA_IN+fn_out)
 
 ## City-level where total days is sig at < 0.05
 p95 = stats_out_final[stats_out_final['p_value_totDays'] < 0.05]
-fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_HEATP05.json'
+fn_out = ''
 p95.to_csv(DATA_IN+FN_OUT)
 
 

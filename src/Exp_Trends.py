@@ -215,7 +215,7 @@ def run_OLS(stats, geog, alpha):
     out = out.merge(pop, on = geog, how = 'left') # merge
     
     # Get total days
-    totDays = OLS(stats, geog, 'total_days', alpha = alpha) # get stats 
+    totDays = OLS(stats, geog, 'tot_days', alpha = alpha) # get stats 
     totDays.rename(columns={"coef": "coef_totDays"}, inplace = True)
     totDays.rename(columns={"p_value": "p_value_totDays"}, inplace = True)
     out = out.merge(totDays, on = geog, how = 'left') # merge

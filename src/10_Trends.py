@@ -19,9 +19,9 @@ import Exp_Trends as expT
 
 #### PATH & FN 
 DATA_PATH = '/home/cascade/projects/UrbanHeat/data/' 
-DATA = 'HI406_2D_' # <---- AlWAYS UPDATA (str for data out)
+DATA = 'HI461_1D_' # <---- AlWAYS UPDATA (str for data out)
 FN_IN = 'processed/PNAS-DATA-v2/'+DATA+'EXP.json' # <---- ALWAYS UPDATE
-HI_STATS = pd.read_json(DATA_IN+FN_IN, orient = 'split')
+HI_STATS = pd.read_json(DATA_PATH+FN_IN, orient = 'split')
 
 # Drop cities with only one Tmax Day in 1983 and none else because you cannot regress them
 print(len(HI_STATS))
@@ -37,11 +37,11 @@ print(len(HI_STATS))
 stats_out = expT.run_OLS(HI_STATS, 'ID_HDC_G0', alpha = 0.05)
 
 #### Add In Meta Data (e.g. geographic data)
-meta_fn = ''
-meta_data = pd.read_csv(DATA_IN+meta_fn)
+meta_fn = DATA_PATH+'interim/GHS-UCDB-IDS.csv'
+meta_data = pd.read_csv(meta_fn)
 
 #### Merge in meta
-stats_out_final = stats_out.merge(meta, on = 'ID_HDC_G0', how = 'left')
+stats_out_final = stats_out.merge(meta_data, on = 'ID_HDC_G0', how = 'left')
 
 #### Add In Population
 pop = HI_STATS[['P1983', 'P2016', 'ID_HDC_G0']]
@@ -49,18 +49,19 @@ pop = pop.drop_duplicates('ID_HDC_G0')
 stats_out_final = stats_out_final.merge(pop, on = 'ID_HDC_G0', how = 'left')
 
 #### Write it out 
+
 ## All data
-fn_out = '' # <---- ALWAYS UPDATE
-stats_out_final.to_csv(DATA_IN+fn_out)
+fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_ALL.json'
+stats_out_final.to_json(fn_out, orient = 'split')
 
 ## City-level where pdays is sig at < 0.05
 p95 = stats_out_final[stats_out_final['p_value_pdays'] < 0.05]
-fn_out = ''
-p95.to_csv(DATA_IN+fn_out)
+fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_EXPP05.json'
+p95.to_json(fn_out, orient = 'split')
 
 ## City-level where total days is sig at < 0.05
 p95 = stats_out_final[stats_out_final['p_value_totDays'] < 0.05]
-fn_out = ''
-p95.to_csv(DATA_IN+FN_OUT)
+fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_HEATP05.json'
+p95.to_json(fn_out, orient = 'split')
 
 
