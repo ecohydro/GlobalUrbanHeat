@@ -22,13 +22,13 @@ FN_STATS = 'processed/PNAS-DATA-v2/HI406_2D_STATS.json' #--- check
 FN_OUT = 'processed/PNAS-DATA-v2/HI406_2D_EXP.json' #--- check
 
 scale = 1
-cols = ('ID_HDC_G0', 'year') # drop duplicate city & year combos for pdays
 
 #### run it 
 stats = pd.read_json(DATA_PATH+FN_STATS, orient = 'split') # read in stats
 df_pop = pd.read_csv(DATA_PATH+FN_POP) # read in interp population from GHS-UCDB
 
-step1 = expT.df_drop(stats, cols)
+step1 = expT.tot_days(stats)
+print(len(step1))
 step2 = expT.make_pdays(step1, df_pop, scale)
 print(len(step2))
 step3 = expT.add_years(step2)
@@ -36,7 +36,4 @@ print(len(step3))
 
 # Save it out
 step3.to_json(DATA_PATH+FN_OUT,orient = 'split')
-print('Step 3 saved)
-
-
-
+print('Step 3 saved')

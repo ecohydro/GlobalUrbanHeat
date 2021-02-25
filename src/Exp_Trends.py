@@ -16,10 +16,11 @@ import pandas as pd
 import numpy as np
 
 #### Functions
-def df_drop(df, cols):
-    "function takes data frame and drops duplicates based on a column, takes list of cols"
-    df_out = pd.DataFrame()
-    df_out = df.drop_duplicates(cols)
+def tot_days(df):
+    """ Calulates the total number of days per year when a heat threshold was met
+    """
+    df_out = df[['ID_HDC_G0','year','duration']].groupby(['ID_HDC_G0','year']).sum().reset_index()
+    df_out.rename(columns={'duration':'tot_days'}, inplace=True)
     
     return df_out
     
@@ -44,7 +45,7 @@ def make_pdays(df_stats, df_pop, scale):
     pdays = pd.DataFrame()
     pdays['ID_HDC_G0'] = data['ID_HDC_G0']
     pdays['year'] = data['year']
-    pdays['duration'] = data['duration']
+    pdays['tot_days'] = data['tot_days']
 
     # Merge
     pdays_merge = pdays.merge(pop_long, on=['ID_HDC_G0', 'year'], how = 'left')
@@ -58,13 +59,13 @@ def make_pdays(df_stats, df_pop, scale):
     pdays_merge = pdays_merge.merge(p ,on=['ID_HDC_G0'], how = 'left')
     
     # Calc p days = total days i * pop i 
-    pdays_merge['people_days'] = pdays_merge['duration'] * pdays_merge['P'] / scale # total people days
+    pdays_merge['people_days'] = pdays_merge['tot_days'] * pdays_merge['P'] / scale # total people days
     
     # Pdays due to heat increase = total days total days >40.6 / yr * Pop in 1983
-    pdays_merge['people_days_heat'] = pdays_merge['duration'] * pdays_merge['P1983'] / scale # people days w/ pop con
+    pdays_merge['people_days_heat'] = pdays_merge['tot_days'] * pdays_merge['P1983'] / scale # people days w/ pop con
     
     # Pdays due to pop increase = total days i * (pop i - pop 83)
-    pdays_merge['people_days_pop'] = pdays_merge['duration'] *(pdays_merge['P'] - pdays_merge['P1983']) / scale # dif
+    pdays_merge['people_days_pop'] = pdays_merge['tot_days'] *(pdays_merge['P'] - pdays_merge['P1983']) / scale # dif
 
     return pdays_merge
 
@@ -88,7 +89,7 @@ def add_years(df):
                 row = []
                 row.append(city)
                 row.append(year)
-                row.append(0) # duration = 0 days
+                row.append(0) # tot_days = 0 days
                 row.append(np.nan) # population for that year is not needed
                 row.append(df[(df['ID_HDC_G0'] == city)]['P1983'].values[0])
                 row.append(df[(df['ID_HDC_G0'] == city)]['P1983'].values[0])

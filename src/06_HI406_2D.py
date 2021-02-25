@@ -25,7 +25,7 @@ def subset(fn_in, fn_out, event_length):
     df = pd.read_json(fn_in, orient = 'split')
     df_out = df[df['duration'] >= event_length]
     df_out.to_json(fn_out, orient = 'split')
-    print(df.out.head(), 'done')
+    print(df_out.head(), 'done')
 
 # Args
 DATA_PATH = '/home/cascade/projects/UrbanHeat/data/'
