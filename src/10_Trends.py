@@ -56,7 +56,7 @@ stats_out_final.to_json(fn_out, orient = 'split')
 
 ## City-level where pdays is sig at < 0.05
 p95 = stats_out_final[stats_out_final['p_value_pdays'] < 0.05]
-fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_EXPP05.json'
+fn_out = fn_out = DATA_PATH+'processed/PNAS-DATA-v2/'+DATA+'TREND_EXP05.json'
 p95.to_json(fn_out, orient = 'split')
 
 ## City-level where total days is sig at < 0.05
