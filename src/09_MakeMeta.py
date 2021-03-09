@@ -33,21 +33,32 @@ ghs = gpd.read_file(ghs_fn)
 cols = ['ID_HDC_G0','CTR_MN_NM', 'UC_NM_MN','GCPNT_LAT','GCPNT_LON']
 df_out = ghs[cols]
 
-# Fix Ivory coast
+# Fix Bad countries in ghs-ucdb
 df_out.CTR_MN_NM = df_out.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') 
 
 # Get UN regions
-regions_fn = DATA_PATH+'raw/countrylist.csv'
-regions = pd.read_csv(regions_fn)
+countries_fn = DATA_PATH+'raw/countrylist.csv'
+countries = pd.read_csv(countries_fn)
 
+# Fix remaining bad countries in UN ISO lists to match GHS-UCDB
+countries.name = countries.name.replace('Brunei Darussalam', 'Brunei') 
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Cabo Verde', 'Cape Verde') 
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Cape Verde', 'Cabo Verde') 
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Moldova, Republic of', 'Moldova')
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Sao Tome and Principe', 'São Tomé and Príncipe')
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('United Kingdom of Great Britain and Northern Ireland', 'United Kingdom')
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Taiwan, Province of China', 'Taiwan')
+countries.CTR_MN_NM = df_out.CTR_MN_NM.replace('Czechia', 'Czech Republic')
+
+# Subset
 cols = ['name','region','sub-region','intermediate-region']
-regions = regions[cols]
-regions.rename(columns={'name': 'CTR_MN_NM'}, inplace = True)
+countries_out = countries[cols]
+countries_out.rename(columns={'name': 'CTR_MN_NM'}, inplace = True) # match GHS col 
 
 # Merge
-df_out = df_out.merge(regions, on = 'CTR_MN_NM', how = 'inner')
+df_out = df_out.merge(countries_out, on = 'CTR_MN_NM', how = 'inner')
 
-# write out 
+# Write out 
 fn_out = DATA_PATH+'interim/GHS-UCDB-IDS.csv'
 df_out.to_csv(fn_out, index = False)
 
