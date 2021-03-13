@@ -35,7 +35,7 @@ cols = ['ID_HDC_G0','CTR_MN_NM', 'UC_NM_MN','GCPNT_LAT','GCPNT_LON']
 df_out = ghs[cols]
 
 # Fix Bad countries in ghs-ucdb
-df_out.CTR_MN_NM = df_out.CTR_MN_NM.replace('CÃ´te d\'Ivoire', 'Ivory Coast') 
+df_out.CTR_MN_NM = df_out.CTR_MN_NM.replace('Côte d\'Ivoire', 'Ivory Coast') 
 
 
 # Get UN regions
@@ -49,8 +49,7 @@ countries_out.rename(columns={'name': 'CTR_MN_NM'}, inplace = True) # match GHS 
 
 # Fix remaining bad countries in UN ISO lists to match GHS-UCDB, CPT March 2021
 countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Brunei Darussalam', 'Brunei') 
-countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Cabo Verde', 'Cape Verde') 
-countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Cape Verde', 'Cabo Verde') 
+countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Cabo Verde', 'Cape Verde')  
 countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Moldova, Republic of', 'Moldova')
 countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('Sao Tome and Principe', 'São Tomé and Príncipe')
 countries_out .CTR_MN_NM = countries_out.CTR_MN_NM.replace('United Kingdom of Great Britain and Northern Ireland', 'United Kingdom')

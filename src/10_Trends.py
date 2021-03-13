@@ -19,7 +19,7 @@ import Exp_Trends as expT
 
 #### PATH & FN 
 DATA_PATH = '/home/cascade/projects/UrbanHeat/data/' 
-DATA = 'HI461_1D_' # <---- AlWAYS UPDATA (str for data out) ------------- WBGT32_1D, WBGT28_1D, HI406_2D, HI461_1D
+DATA = 'WBGT28_1D_' # <---- AlWAYS UPDATA (str for data out) ------------- WBGT32_1D, WBGT28_1D, HI406_2D, HI461_1D
 FN_IN = 'processed/PNAS-DATA-v2/'+DATA+'EXP.json' # <---- ALWAYS CHECK
 HI_STATS = pd.read_json(DATA_PATH+FN_IN, orient = 'split')
 
