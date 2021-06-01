@@ -20,19 +20,20 @@ import os
 from glob import glob
 
 # Arges Needed 
-DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/' # <---- ALWAYS CHECK
+DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/WBGT/' # <---- ALWAYS CHECK
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/STATS/'
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
-Tthresh = 46.1 # <---------- ALWAYS CHECK
-data = 'HI461' #'HI406' # HI or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
+Tthresh = 32 # <---------- ALWAYS CHECK
+data = 'WBGT32' #'HI406' # HI461 or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
 cpu = 20 # number of cpus to use
-fn_out = '/home/cascade/projects/UrbanHeat/data/processed/PNAS-DATA-v2/'+data+'_1D_STATS.json'# final FN - 2-day stats
+fn_out = '/home/cascade/projects/UrbanHeat/data/processed/PNAS-DATA-v2/'+data+'_1D_STATS.json'# final FN 
 
 # Step 1 - Read and stack HI or WBGT
 ####################################################################################################
-print('STEP1')
+print('STEP1', data, Tthresh)
+print(fn_out)
 step1 = es.read_data(dir_path, space_dim = space_dim, time_dim = time_dim)
 print('Data stacked')
 

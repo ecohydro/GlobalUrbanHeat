@@ -1,10 +1,10 @@
 # UrbanHeat
-Code to map the TMax of 13,000 cities on the planet from 1983 - 2016
+Code to map the TMax of 13,000 cities on the planet from 1983 - 2016. <br>
+By Cascade Tuholske, Feb 2021 (cascade at ucsb dot edu)
 
-**Steps (In SRC)**
-1. poly_to_raster.py - turn the (GHS-UCDB)[https://ghsl.jrc.ec.europa.eu/ucdb2018Overview.php] to a raster.
-2. UrbanTempParallel.py - find daily areal avg. Tmax for each city in the GHS-UCDB from 1983 - 2016.
-3. Tmax_Stats.py - calculate all stats of extreme heat events
-4. Edge_Search.py - find all dec-jan overlap events manually and fix them in the record 
+**STEPS are IN SRC**
+1. Make a conda env with requirements.txt (Python3)
+2. It is recommended to use a machine with at least 20 cores that can be run in parallel.
+3. CHIRTS-daily and RH is from UCSB CHC Ftp
+4. Global Human Settlement Layer Urban Center Data base is (here)[https://ghsl.jrc.ec.europa.eu/ucdb2018Overview.php] t
 
-**ADD REQUIREMENTS**
