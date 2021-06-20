@@ -1,12 +1,12 @@
 ########################################
 #
 #   Program finds the areal averaged TMax and realitive humidity
-#   UCSB CHC CHIRTS Data or ERA-5 RH and a raster with polygon IDS burned (GHS-UCDB)
+#   UCSB CHC CHIRTS Data or RH and a raster with polygon IDS burned (GHS-UCDB)
 #   Designed to run through a file list in parallel for a dir structured by year
 # 
 #   By Cascade Tuholske 2019-08-20
 #
-#   Will need to be run on realitive humidity and Tmax from CHS to make HI 
+#   Will need to be run on realitive humidity and Tmax from UCSB CHC to make HI 
 #
 #   NOTE: Running on ERA-5 RH 2020.09.03 by CPT - /home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/
 #
@@ -40,7 +40,7 @@ from multiprocessing import Pool
 # DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
 
 # ERA5 CHIRTS DAILY RH Run
-# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated (old run was actually MERRA-2 RH)
+# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated 
 DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/' # This is the good RH data from CHC
 DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS/CHIRTS_DAILY/RH'# Updated path for organization 2021.02.01 CPT
 
@@ -90,7 +90,7 @@ def temp_ghs(dir_nm):
             # Open CHIRT Data and turn data into array
             tempRst = rasterio.open(dir_nm+'/'+fn)
 
-            # Make arrays into x    array DataArray
+            # Make arrays into x array DataArray
             tempRst_da = xr.DataArray(tempRst.read(1), dims = ['y', 'x']) # y and x are our 2-d labels
             tempRst_da.data[np.isnan(tempRst_da.data)] = -9999 # CPT 2020.09.03 <<<<<<----------------- only for ERA5 RH
 
@@ -106,7 +106,7 @@ def temp_ghs(dir_nm):
             # Mask pixels for both ghs and chirts where ghs cities are not present
             ds_mask = ds_mask.where(ds_mask.ghs > 0, drop = False)
 
-            # Group poly_IDs find temp
+            # Group poly_IDs find area-average temp
             avg = ds_mask.groupby('ghs').mean(xr.ALL_DIMS)
 
             # turn GHS IDS and avg. CHIRTMax values into 1-D numpy arrays of equal length
