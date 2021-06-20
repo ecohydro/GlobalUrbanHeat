@@ -7,7 +7,7 @@
 #
 #   NOTE: Fully rewriten on 2021.02.01 see 'oldcode' for prior version / CPT
 #   
-#   These are the functions needed for 08_Exposure.py & 08_Trends.py
+#   These are the functions needed for 08_Exposure.py & 10_Trends.py
 #
 #################################################################################
 

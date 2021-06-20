@@ -5,7 +5,7 @@
 #   Updated 2020.09;07 CPT
 #   Updated Feb 2021 CPT to use functions from Exp_Trends.py
 #
-#   Calculates exposure as population x days > 40.6C 
+#   Calculates exposure as population x days > treshold
 #
 #################################################################################
 
