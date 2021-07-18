@@ -30,12 +30,13 @@ def poly_to_raster (rst, polys, value, touched, out_fn, fill_value):
     with rasterio.open(out_fn, 'w', **meta) as out:
         out.write_band(1, burned)
 
-rst = '' # basemap raster, just use one of the CHIRTS-daily rasters
-polys = '' # file path to GHS-UCDB
-value = '' # ID_HDC_G0 is the GHS-UCDB id column
-touched = 'True' # using all touched for this analysis
-out_fn = '' # Path plus 'interim/GHS_UCDB_Raster_touched.tif'
-fill_value = '' # NAN value
+if __name__ == "__main__":
+    rst = '' # basemap raster, just use one of the CHIRTS-daily rasters
+    polys = '' # file path to GHS-UCDB
+    value = '' # ID_HDC_G0 is the GHS-UCDB id column
+    touched = 'True' # using all touched for this analysis
+    out_fn = '' # Path plus 'interim/GHS_UCDB_Raster_touched.tif'
+    fill_value = '' # NAN value
 
-# Run it
-poly_to_raster (rst, polys, value, touched, out_fn, fill_value)
+    # Run it
+    poly_to_raster (rst, polys, value, touched, out_fn, fill_value)
