@@ -8,6 +8,9 @@
 #
 #       NOAA Heat Index Equation - https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
 #
+#       Note - right now units are all in C. They can be updated to F or C as needed. 
+#              See make_hi function to make changes CPT July 2021
+#
 #################################################################################
 
 #### Dependencies
@@ -17,9 +20,12 @@ import xarray
 import os
 import glob
 import rasterio
+import matplotlib.pyplot as plt
 import time
 import multiprocessing as mp 
 from multiprocessing import Pool
+import multiprocessing
+
 
 #### Functions
 def C_to_F(Tmax_C):
@@ -107,11 +113,12 @@ def heatindex(Tmax, RH, unit_in, unit_out):
     
     return HI
 
-def make_hi(zipped):
+def make_hi(zipped, himax_path_out):
     
     """ Takes an RH and Tmax file zipped together and writes a heat index tif
     Args:
         zipped = zipped RH [0] and tmax [1] file path/name
+         himax_path_out = path/to/himax_out 
     """
     
     # get data date
@@ -132,17 +139,16 @@ def make_hi(zipped):
     arr = hi[0]
     
     # write it out
-    fn_out = os.path.join(himax_path_out,data_out+'.'+date+'.tif')
+#     fn_out = os.path.join(himax_path_out,data_out+'.'+date+'.csv')
+#     print(type(arr.data))
+#     np.savetxt(fn_out, arr, delimiter=",")
+    sharing=False
     
-    with rasterio.open(fn_out, 'w', **meta) as out:
+    fn_out = os.path.join(himax_path_out,data_out+'.'+date+'.tif')
+    with rasterio.open(fn_out, 'w', **meta, sharing=False) as out:
         out.write_band(1, arr)
-        
+
 def hi_loop(zipped_dir):
-    """ takes a zipped list of dir for RH and Tmax and then goes through each file to make
-    a heat index max tif.
-    Args:
-        zipped_dir = dir (e.g year) for RH[0] and Tmax[0]
-    """
     
     # print process
     print(multiprocessing.current_process())
@@ -152,7 +158,6 @@ def hi_loop(zipped_dir):
     zipped_fn_list = list(zip(rh_fns, tmax_fns)) # zipped files names 
     
     year = zipped_dir[0].split('Tmax/')[1] # get year
-    print(year)
 
     # make dir to write files 
     himax_path_out = os.path.join(himax_path, year) 
@@ -161,9 +166,10 @@ def hi_loop(zipped_dir):
     print(cmd, 'made')
     
     # write himax tifs in a loop
-    for zipped in zipped_fn_list:
-        make_hi(zipped)
-        
+    test = zipped_fn_list[:4]
+    for zipped in test:#zipped_fn_list:
+        make_hi(zipped, himax_path_out)
+
 def parallel_loop(function, dir_list, cpu_num):
     """Run a routine in parallel
     Args: 
@@ -179,25 +185,22 @@ def parallel_loop(function, dir_list, cpu_num):
 
     end = time.time()
     print(end-start)
-    
-#### Run it
-if __name__ == "__main__":
-    
-    # Paths
-    rh_path = os.path.join('/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum-Tmax/') # RH min made with CHIRTS-daily Tmax
-    tmax_path = os.path.join('/home/chc-data-out/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/') # CHIRTS-daily Tmax
-    himax_path = os.path.join('/scratch/cascade/UEH-daily/himax/') # path to write out HImax daily tifs
-    
-    # set up list of dirs for parallel loop
-    year_list = sorted(os.listdir(rh_path)) # years
-    rh_dirs = [os.path.join(rh_path, str(year)) for year in year_list] # rh years dirs
-    tmax_dirs = [os.path.join(tmax_path, str(year)) for year in year_list] # rh years dirs
-    zipped_dir_list = list(zip(rh_dirs,tmax_dirs)) # zip dirs 
 
-    # data out
-    data_out = 'himax'
-    unit_in = 'C'
-    unit_out = 'C
-    
-    # run it
-    parallel_loop(function = hi_loop, dir_list = zipped_dir_list, cpu_num = 20)
+# Set up file paths
+rh_path = os.path.join('/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum-Tmax/') # RH min made with CHIRTS-daily Tmax
+tmax_path = os.path.join('/home/chc-data-out/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/') # CHIRTS-daily Tmax
+himax_path = os.path.join('/scratch/cascade/UEH-daily/himax/') #/csv # path to write out HImax daily tifs
+
+# set up list of dirs for parallel loop
+year_list = sorted(os.listdir(rh_path)) # years
+rh_dirs = [os.path.join(rh_path, str(year)) for year in year_list] # rh years dirs
+tmax_dirs = [os.path.join(tmax_path, str(year)) for year in year_list] # rh years dirs
+zipped_dir_list = list(zip(rh_dirs,tmax_dirs)) # zip dirs 
+
+# global variables
+data_out = 'himax'
+
+zipped_dir_list = zipped_dir_list[:3]
+
+# Run it
+parallel_loop(function = hi_loop, dir_list = zipped_dir_list, cpu_num = 20)
