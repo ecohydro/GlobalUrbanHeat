@@ -1,48 +1,27 @@
 ##################################################################################
 #
 #       Make Heat Index
-#       By Cascade Tuholske 2020.01.21
+#       By Cascade Tuholske Spring 2021
 #
-#       Program is designed to take areal-averaged CHIRTS Tmax for each GHS-UCDB and down-scaled MERRA-2 
-#       humidity data and calculate the heat index for each city with a Tmax >80F.
+#       Program makes daily maximum heat index tifs with CHIRTS-daily Tmax and 
+#       relative humidity min estimated with CHIRTS-daily Tmax
 #
 #       NOAA Heat Index Equation - https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
-#
-#       **NOTE**
-#       At first I thought the heat index values for the hottest areas were insane (> 140F), 
-#       but I spot checked the results and the 
-#       NOAA Heat Index Table(https://www.kjrh.com/weather/weather-blog-what-exaclty-is-the-heat-index) 
-#       simply reds out values where Tmax >40C and RH > 50%. So I guess were are on track ...
-#
-#       Updated 2021.02.01 to have new file paths and names 
 #
 #################################################################################
 
 #### Dependencies
-import pandas as pd
 import numpy as np
-import xarray as xr
-from random import random
-from itertools import groupby
-from operator import itemgetter
-import geopandas as gpd 
+import pandas as pd
+import xarray 
+import os
 import glob
-from statistics import mean
-import julian
-import math
+import rasterio
+import time
+import multiprocessing as mp 
+from multiprocessing import Pool
 
-#### DIR PATHS & Arguments
-DIR_Tmax = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/Tmax/'
-DIR_RH = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/RH/'
-DIR_HI = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/HI/'
-unit_in = 'C'
-unit_out = 'C'
-
-FN_RH_IN = 'GHS-RH_' # name of RH file in
-FN_Tmax_IN = 'GHS-Tmax_' # name of Tmax file in
-FN_OUT = 'GHS-HI_' # name for files out
-
-#### Functions 
+#### Functions
 def C_to_F(Tmax_C):
     "Function converts temp in C to F"
     Tmax_F = (Tmax_C * (9/5)) + 32
@@ -54,35 +33,6 @@ def F_to_C(Tmax_F):
     Tmax_C = (Tmax_F - 32) * (5/9)
     
     return Tmax_C
-
-def csv_to_xr(file_in, time_dim, space_dim):
-    
-    """ Function reads in a csv w/ GHS-UCDB IDs and temp, isolates the temp
-    and returns a xarray data array with dims set to city ids and dates
-    
-    Args:
-        file_in = file name and path
-        time_dim = name for time dim as a str ... use date :-)
-        space_dim = col name for GHS-UCDB IDs as an str (ID_HDC_G0)
-    """
-    
-    df = pd.read_csv(file_in) # read the file in as a df
-    print(df.shape)
-    
-    df_id = df[space_dim] # get IDs
-    df = df.iloc[:,3:] # get only temp columns
-    df.index = df_id # set index values
-    df_drop = df.dropna() # Drop cities w/ no temp record 
-    print(len(df_drop))
-    
-    arr = df_drop.to_numpy() # turn temp cols into an np array
-    
-    # make xr Data Array w/ data as temp and dims as spece (e.g. id)
-    
-    # Note 2019 09 17 changed to xr.Dataset from xr.Dataarray
-    xr_da = xr.DataArray(arr, coords=[df_drop.index, df_drop.columns], 
-                            dims=[space_dim, time_dim])
-    return xr_da
 
 def heatindex(Tmax, RH, unit_in, unit_out):
     
@@ -102,9 +52,9 @@ def heatindex(Tmax, RH, unit_in, unit_out):
     Returns HI
     """
     
-    # Make all data as float
-    Tmax = Tmax.astype('float')
-    RH = RH.astype('float')
+    # Make all data as float 
+#     Tmax = Tmax.astype('float')
+#     RH = RH.astype('float')
     
     # 1 convert C to F if needed
     if unit_in == 'C':
@@ -157,48 +107,97 @@ def heatindex(Tmax, RH, unit_in, unit_out):
     
     return HI
 
-def apply_heatindex(DIR_Tmax, DIR_RH, DIR_HI, unit_in, unit_out):
-    """Function applies NOAA's heatindex to two pair directories w/ CSVs of realitive humidity
-    and tempatures, respective, in a pairwise fashion
+def make_hi(zipped):
     
+    """ Takes an RH and Tmax file zipped together and writes a heat index tif
     Args:
-        DIR_Tmax = the directory where Tmax .csv files are stored
-        DIR_RH = the directory where RH .csv files are stored
-        DIR_HI = the directory where HI files will be written
-        unit_in = temp unit for Tmax (C or F)
-        unit_out = desired temp unit for HI (C or F) for the output
+        zipped = zipped RH [0] and tmax [1] file path/name
     """
-    Tmax_fn_list = glob.glob(DIR_Tmax+'*.csv')
-    RH_fn_list = glob.glob(DIR_RH+'*.csv')
-
-    for Tmax_fn, RH_fn in zip(sorted(Tmax_fn_list),sorted(RH_fn_list)):
     
-        # Check the years RH and Tmax 
-        Tmax_year = Tmax_fn.split(FN_Tmax_IN)[1].split('.csv')[0] 
-        print('Tmax year is ', Tmax_year)
-        RH_year = RH_fn.split(FN_RH_IN)[1].split('.csv')[0] 
-        print('RH year is ', RH_year)
-
-        # Read csv as x-array
-        Tmax_xr = csv_to_xr(Tmax_fn, time_dim = 'date', space_dim = 'ID_HDC_G0')
-        RH_xr = csv_to_xr(RH_fn, time_dim = 'date', space_dim = 'ID_HDC_G0')
-
-        # Make heat index
-        hi = heatindex(Tmax_xr, RH_xr, unit_in = unit_in, unit_out = unit_out)
-
-        # Get countries and city ids
-        df_out = pd.read_csv(Tmax_fn)
-        df_out = df_out[['ID_HDC_G0', 'CTR_MN_NM']]
-
-        # write to csv
-        hi_df = hi.to_pandas()
-        #hi_df['ID_HDC_G0'] = hi_df.index
-        df_out = df_out.merge(hi_df, on = 'ID_HDC_G0', how = 'inner')
-        df_out_nm = FN_OUT+Tmax_year+'.csv' 
-        df_out.to_csv(DIR_HI+df_out_nm)
-        print(RH_year, ' done \n')
+    # get data date
+    date =zipped[0].split('RH.')[1].split('.tif')[0]
     
-    print('ALL DONE!')
+    # get meta data
+    meta = rasterio.open(zipped[0]).meta
+    meta['dtype'] = 'float64'
+    
+    # make hi
+    rh_fn = zipped[0] 
+    tmax_fn = zipped[1]
+    tmax = xarray.open_rasterio(tmax_fn)
+    rh = xarray.open_rasterio(rh_fn)
+    hi = heatindex(Tmax = tmax, RH = rh, unit_in = 'C', unit_out = 'C')
+    
+    # get array
+    arr = hi[0]
+    
+    # write it out
+    fn_out = os.path.join(himax_path_out,data_out+'.'+date+'.tif')
+    
+    with rasterio.open(fn_out, 'w', **meta) as out:
+        out.write_band(1, arr)
+        
+def hi_loop(zipped_dir):
+    """ takes a zipped list of dir for RH and Tmax and then goes through each file to make
+    a heat index max tif.
+    Args:
+        zipped_dir = dir (e.g year) for RH[0] and Tmax[0]
+    """
+    
+    # print process
+    print(multiprocessing.current_process())
+    
+    rh_fns = sorted(glob.glob(zipped_dir[0]+'/*.tif')) # get RH min files
+    tmax_fns = sorted(glob.glob(zipped_dir[1]+'/*.tif')) # get Tmax files
+    zipped_fn_list = list(zip(rh_fns, tmax_fns)) # zipped files names 
+    
+    year = zipped_dir[0].split('Tmax/')[1] # get year
+    print(year)
 
-#### RUN THE CODE
-apply_heatindex(DIR_Tmax, DIR_RH, DIR_HI, unit_in = unit_in , unit_out = unit_out)
+    # make dir to write files 
+    himax_path_out = os.path.join(himax_path, year) 
+    cmd = 'mkdir '+himax_path_out
+    os.system(cmd)
+    print(cmd, 'made')
+    
+    # write himax tifs in a loop
+    for zipped in zipped_fn_list:
+        make_hi(zipped)
+        
+def parallel_loop(function, dir_list, cpu_num):
+    """Run a routine in parallel
+    Args: 
+        function = function to apply in parallel
+        dir_list = list of dir to loop through 
+        cpu_num = numper of cpus to fire  
+    """ 
+    start = time.time()
+    pool = Pool(processes = cpu_num)
+    pool.map(function, dir_list)
+    # pool.map_async(function, dir_list)
+    pool.close()
+
+    end = time.time()
+    print(end-start)
+    
+#### Run it
+if __name__ == "__main__":
+    
+    # Paths
+    rh_path = os.path.join('/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum-Tmax/') # RH min made with CHIRTS-daily Tmax
+    tmax_path = os.path.join('/home/chc-data-out/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/') # CHIRTS-daily Tmax
+    himax_path = os.path.join('/scratch/cascade/UEH-daily/himax/') # path to write out HImax daily tifs
+    
+    # set up list of dirs for parallel loop
+    year_list = sorted(os.listdir(rh_path)) # years
+    rh_dirs = [os.path.join(rh_path, str(year)) for year in year_list] # rh years dirs
+    tmax_dirs = [os.path.join(tmax_path, str(year)) for year in year_list] # rh years dirs
+    zipped_dir_list = list(zip(rh_dirs,tmax_dirs)) # zip dirs 
+
+    # data out
+    data_out = 'himax'
+    unit_in = 'C'
+    unit_out = 'C
+    
+    # run it
+    parallel_loop(function = hi_loop, dir_list = zipped_dir_list, cpu_num = 20)
