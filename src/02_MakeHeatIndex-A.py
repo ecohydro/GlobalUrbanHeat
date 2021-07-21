@@ -32,11 +32,18 @@ def hi_loop(year):
     """
     """
     print(multiprocessing.current_process(), year)
-    
+     
     # Set up file paths
     # RH min made with CHIRTS-daily Tmax
     rh_path = os.path.join('/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum-Tmax/', str(year)) 
+    # CHIRTS-daily tmax 
     tmax_path = os.path.join('/home/chc-data-out/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/', str(year)) 
+    out_path = os.path.join('/scratch/cascade/UEH-daily/himax/', str(year))
+                            
+    # make dir to write 
+    cmd = 'mkdir '+out_path
+    os.system(cmd)
+    print(cmd)
     
     # CHIRTS-daily Tmax
     rh_fns = sorted(glob.glob(rh_path+'/*.tif'))
@@ -45,7 +52,7 @@ def hi_loop(year):
      
     test = zipped_list[0:3]
     
-    for fns in test:
+    for i, fns in enumerate(test):
         # get date
         date =fns[0].split('RH.')[1].split('.tif')[0]
     
@@ -53,43 +60,46 @@ def hi_loop(year):
         data_out = 'himax'
     
         # get meta data
-        meta = rasterio.open(zipped[0]).meta
+        meta = rasterio.open(fns[0]).meta
         meta['dtype'] = 'float64'
     
         # make hi
-        rh_fn = zipped[0] 
-        tmax_fn = zipped[1]
+        rh_fn = fns[0] 
+        tmax_fn = fns[1]
         tmax = xarray.open_rasterio(tmax_fn)
         rh = xarray.open_rasterio(rh_fn)
         hi = ClimFuncs.heatindex(Tmax = tmax, RH = rh, unit_in = 'C', unit_out = 'C')
     
         # get array
-        arr = hi[0]
+        arr = hi.data[0]
+        #print(type(arr))
         
-        fn_out = '/scratch/cascade/UEH-daily/himax/' + str(year) + '/test' + str(i) + '.tif'
+        # FN out
+        print(date)
+        fn_out = os.path.join(out_path,data_out+'.'+date+'.tif')
+        print(fn_out)
         
         with rasterio.open(fn_out, 'w', **meta) as out:
             out.write_band(1, arr)
             
-def parallel_loop(function, dir_list, cpu_num):
+def parallel_loop(function, start_list, cpu_num):
     """Run a routine in parallel
     Args: 
         function = function to apply in parallel
-        dir_list = list of dir to loop through 
+        start_list = list of args for function to loop through in parallel
         cpu_num = numper of cpus to fire  
     """ 
     start = time.time()
     pool = Pool(processes = cpu_num)
-    pool.map(function, dir_list)
-    # pool.map_async(function, dir_list)
+    pool.map(function, start_list)
     pool.close()
 
     end = time.time()
     print(end-start)
 
-# Make years 
+#### Make years 
 year_list = list(range(1983,2016+1))
 year_sub = year_list[0:4]
 
-# Run it
+#### Run it
 parallel_loop(function = hi_loop, start_list = year_sub, cpu_num = 4)
