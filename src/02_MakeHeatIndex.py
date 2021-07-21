@@ -101,4 +101,4 @@ if __name__ == "__main__":
     year_list = list(range(1983,2016+1))
 
     # Run it
-    parallel_loop(function = hi_loop, start_list = year_list, cpu_num = 4)
+    parallel_loop(function = hi_loop, start_list = year_list, cpu_num = 20)
