@@ -49,8 +49,9 @@ def hi_loop(year):
     rh_fns = sorted(glob.glob(rh_path+'/*.tif'))
     tmax_fns = sorted(glob.glob(tmax_path+'/*.tif'))
     zipped_list = list(zip(rh_fns,tmax_fns))
+    zipped_list = zipped_list[:3]# test
     
-    for fns in enumerate(zipped_list):
+    for fns in zipped_list:
         # get date
         date =fns[0].split('RH.')[1].split('.tif')[0]
     
@@ -59,7 +60,7 @@ def hi_loop(year):
     
         # get meta data
         meta = rasterio.open(fns[0]).meta
-        meta['dtype'] = 'float64'
+        meta['dtype'] = 'float32'
     
         # make hi
         rh_fn = fns[0] 
@@ -70,6 +71,7 @@ def hi_loop(year):
     
         # get array
         arr = hi.data[0]
+        arr = arr.astype('float32') # to save space 
         #print(type(arr))
         
         # FN out
@@ -99,6 +101,7 @@ if __name__ == "__main__":
     
     # Make years 
     year_list = list(range(1983,2016+1))
+    year_list = year_list[:3]# test
 
     # Run it
     parallel_loop(function = hi_loop, start_list = year_list, cpu_num = 20)
