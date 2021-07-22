@@ -57,6 +57,7 @@ def wbgt_loop(year):
     
     # Get HI
     hi_fns = sorted(glob.glob(hi_path+'/*.tif'))
+    # hi_fns = hi_fns[:3] # for testing
     
     for fn in hi_fns:
         print(fn)
@@ -66,11 +67,13 @@ def wbgt_loop(year):
         date =fn.split('himax.')[1].split('.tif')[0]
         fn_out = os.path.join(out_path, data+'.'+date+'.tif') 
         meta = rasterio.open(fn).meta # meta data
+        meta.update({'dtype' : 'float32'}) # to save on file space
 
-        # hi_to_wbgt
+        hi_to_wbgt
         hi_arr_c = xarray.open_rasterio(fn).data[0]
         hi_arr_f = c_to_f(hi_arr_c) # switch hi from c to f
         wbgt_arr = hi_to_wbgt(hi_arr_f) # write wbgt in c
+        wbgt_arr = wbgt_arr.astype('float32')
              
         with rasterio.open(fn_out, 'w', **meta) as out:
             out.write_band(1, wbgt_arr)
@@ -97,6 +100,7 @@ if __name__ == "__main__":
     
     # Make years 
     year_list = list(range(1983,2016+1))
-
+    # year_list = year_list[:3] # for testing
+    
     # Run it
     parallel_loop(function = wbgt_loop, start_list = year_list, cpu_num = 20)
