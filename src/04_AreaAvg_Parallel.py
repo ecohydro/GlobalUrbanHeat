@@ -1,14 +1,11 @@
 ########################################
 #
-#   Program finds the areal averaged TMax and realitive humidity
-#   UCSB CHC CHIRTS Data or RH and a raster with polygon IDS burned (GHS-UCDB)
+#   Program finds the Program finds the area-average daily HI or WBGT for each GHS-UCDB.
+#   Requires HI or WBGT rasters and raster with polygon IDS burned (GHS-UCDB)
 #   Designed to run through a file list in parallel for a dir structured by year
 # 
-#   By Cascade Tuholske 2019-08-20
+#   By Cascade Tuholske 2019-08-20, updated July 2021
 #
-#   Will need to be run on realitive humidity and Tmax from UCSB CHC to make HI 
-#
-#   NOTE: Running on ERA-5 RH 2020.09.03 by CPT - /home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/
 #
 ########################################
 # 
@@ -35,23 +32,17 @@ import multiprocessing as mp
 from glob import glob
 from multiprocessing import Pool
 
-# ERA5 CHIRTS DAILY Tmax Run
-# DATA_IN = '/home/CHIRTS/Tmax/v1.0/daily_ERA5/'
-# DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/ERA5_Tmax/'
 
-# ERA5 CHIRTS DAILY RH Run
-# DATA_IN = '/home/CHIRTS/daily_ERA5/' CPT 2020.08.26 updated 
-DATA_IN = '/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum/' # This is the good RH data from CHC
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS/CHIRTS_DAILY/RH'# Updated path for organization 2021.02.01 CPT
+# DATA IN/OUT ----- ALWAYS UPDATE 
+DATA_IN = os.path.join('/scratch/cascade/UEH-daily/wbgtmax/')
+DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/GHS-wbgtmax/')# Updated path for organization 2021.02.01 CPT
 
 # Always use keep the same 
-DATA_INTERIM = '/home/cascade/projects/UrbanHeat/data/interim/'
+DATA_INTERIM = os.path.join('/home/cascade/projects/UrbanHeat/data/interim/') 
 
 # DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
-DATA = 'RH.' #'Tmax.'
-FN_OUT = 'GHS-RH' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
-# FN_OUT = 'GHS-Tmax-DAILY'     #<<<------------    ALWAYS UPDATE
-# FN_OUT = 'GHS-Tmax-RH'     #<<<------------    ALWAYS UPDATE
+DATA = 'wbgtmax.' #
+FN_OUT = 'GHS-wbgtmax' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -60,12 +51,12 @@ def temp_ghs(dir_nm):
     print(mp.current_process())
 
     # Open the file with GeoPANDAS read_file
-    ghs_ids_fn = 'GHS-UCSB-IDS.csv'
-    ghs_ids_df = pd.read_csv(DATA_INTERIM+ghs_ids_fn)
+    ghs_ids_fn = 'GHS-UCDB-IDS.csv' 
+    ghs_ids_df = pd.read_csv(os.path.join(DATA_INTERIM, ghs_ids_fn))
 
     # Open Polygon Raster
     polyRst_fn = 'GHS_UCDB_Raster_touched.tif'
-    polyRst = rasterio.open(DATA_INTERIM+polyRst_fn)
+    polyRst = rasterio.open(os.path.join(DATA_INTERIM, polyRst_fn))
 
     # Set fn out, change as needed 
     fn_out = FN_OUT
@@ -125,7 +116,7 @@ def temp_ghs(dir_nm):
             ghs_ids_df = ghs_ids_df.merge(df_avg, on='ID_HDC_G0', how = 'outer')
             
             # CPT 2020.09.04 Try writing csv as we go <<<<----- Test
-            ghs_ids_df.to_csv(DATA_OUT+fn_out+'_'+dir_year+'.csv') # csv out
+            ghs_ids_df.to_csv(os.path.join(DATA_OUT+fn_out+'_'+dir_year+'.csv')) # csv out
     print('DONE ! ! !')
 
 # start pools
@@ -145,19 +136,21 @@ def parallel_loop(function, dir_list, cpu_num):
     end = time.time()
     print(end-start)
 
-# Get dir list
-dir_list = sorted(glob(DATA_IN+'*/'))
-print(dir_list)
+# run it 
+if __name__ == "__main__":
+    # Get dir list
+    dir_list = sorted(glob(DATA_IN+'*/'))
+    print(dir_list)
 
-# For ERA5 Dir 
-dir_list = dir_list[:-1]
-print(dir_list)
+    # For ERA5 Dir 
+    dir_list = dir_list[:-1]
+    print(dir_list)
 
-# set number of cores to use
-cpu_num = 20 
+    # set number of cores to use
+    cpu_num = 20 
 
-# Execute code
-print('STARTING LOOP')
-parallel_loop(temp_ghs, dir_list, 20)
-print(DATA_OUT)
-print('ENDING LOOP')
+    # Execute code
+    print('STARTING LOOP')
+    parallel_loop(temp_ghs, dir_list, 20)
+    print(DATA_OUT)
+    print('ENDING LOOP')
