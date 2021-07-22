@@ -50,7 +50,7 @@ def hi_loop(year):
     tmax_fns = sorted(glob.glob(tmax_path+'/*.tif'))
     zipped_list = list(zip(rh_fns,tmax_fns))
     
-    for i, fns in enumerate(zipped_list):
+    for fns in enumerate(zipped_list):
         # get date
         date =fns[0].split('RH.')[1].split('.tif')[0]
     
