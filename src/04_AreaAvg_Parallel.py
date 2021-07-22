@@ -73,12 +73,12 @@ def temp_ghs(dir_nm):
         # find all the tif files
         if fn.startswith(DATA):        
 
-            # Get the date of each chirt file
+            # Get the date of each file
             date = (fn.split(DATA)[1].split('.tif')[0]) 
             print(dir_year)
             print(date)
 
-            # Open CHIRT Data and turn data into array
+            # Open data and turn data into array
             tempRst = rasterio.open(dir_nm+'/'+fn)
 
             # Make arrays into x array DataArray
