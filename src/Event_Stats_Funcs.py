@@ -30,7 +30,11 @@ import os
 #### Function Loads all Tmax Data as an X-array
 def read_data(dir_path, space_dim, time_dim):
     """ Function reads in all Tmax .csv files, joins them by date along the x-axis
-    and returns the whole record as a x-array data array
+    and returns the whole record as a x-array data array.
+    
+    Note - When the GHS-UCDB are turned into a raster, some urban settlements are dropped due to overlap with pixels. These 
+    dropped urban settlements are thus still included, but assigned the ID_HDC_G0 value from the first settlment 'rasterized' 
+    CPT, 2021
     
     Args:   
         dir_path = path to .csv files 
@@ -43,23 +47,29 @@ def read_data(dir_path, space_dim, time_dim):
 
     # Open all Tmax files and concat into a df
     for i, fn in enumerate(fn_list):    
+        
         # Open the CSV
         df = pd.read_csv(os.path.join(fn))
+        print(df.shape)
 
         # Get the city ids 
         if i == 1:
-            df_id = df[space_dim]
+            df_id = df.dropna()[space_dim]
+            print(len(df_id), '\n')
 
         # get only the Tmax columns and concate date list 
-        df_temp = df.iloc[:,3:] # get only temp columns
+        df_temp = df.iloc[:,9:] # get only temp columns
         date_list = date_list+list(df_temp.columns)
+        print(df_temp.columns[0])
+        print(df_temp.shape)
 
         # Drop cities w/ no temp record 
         df_temp_drop = df_temp.dropna()
+        print(df_temp_drop.shape)
 
         # Merge
         df_out = pd.concat([df_out, df_temp_drop], axis=1)
-        print(df_out.shape)
+        print(df_out.shape, '\n')
     
     # make date into an array
     tmax_arr = df_out.to_numpy()
@@ -292,7 +302,7 @@ def df_split(DATA_OUT, data, cpu, df_in):
     """
     
     # make a tmp dir to write out 
-    dir_nm = DATA_OUT+data+'_tmp/'
+    dir_nm = os.path.join(DATA_OUT+data+'_tmp/')
     print(dir_nm)
     os.mkdir(dir_nm)
     

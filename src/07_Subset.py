@@ -2,8 +2,8 @@
 #
 #   By Cascade Tuholske Feb 2021
 #
-#   Subset any result from Stats_parallel to identify events of a specific length
-#   or longer.
+#   Subset any result from Stats_parallel to identify events duration of greater 
+#   than a specific length.
 #
 #################################################################################
 
@@ -34,4 +34,5 @@ fn_out = os.path.join(DATA_PATH,'processed/PNAS-DATA-v2/HI406_2D_STATS.json') # 
 event_length = 2 # great than or equalt to 
 
 # Run it
-subset(fn_in, fn_out, event_length)
+if __name__ == "__main__":
+    subset(fn_in, fn_out, event_length)

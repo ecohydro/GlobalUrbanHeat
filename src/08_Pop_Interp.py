@@ -54,25 +54,27 @@ def df_interp(df, start_col, end_col):
     
     return new_df
 
+
 #### run function
-df7590 = df_interp(df_pop, 1975, 1990)
-df9000 = df_interp(df_pop, 1990, 2000)
-df0015 = df_interp(df_pop, 2000, 2015)
+if __name__ == "__main__":
+    df7590 = df_interp(df_pop, 1975, 1990)
+    df9000 = df_interp(df_pop, 1990, 2000)
+    df0015 = df_interp(df_pop, 2000, 2015)
 
-## Project 2016 values
-df2016 = pd.DataFrame() # make an empty df
-nan_list = np.full((1, len(df_pop)), np.nan)[0] # make an empty df list
-df2016['P2000'] = df_pop[2000]
-df2016['P2015'] = df_pop[2015]
-df2016['P2016'] = nan_list # populate 2016 w/ nan 
+    ## Project 2016 values
+    df2016 = pd.DataFrame() # make an empty df
+    nan_list = np.full((1, len(df_pop)), np.nan)[0] # make an empty df list
+    df2016['P2000'] = df_pop[2000]
+    df2016['P2015'] = df_pop[2015]
+    df2016['P2016'] = nan_list # populate 2016 w/ nan 
 
-df2016 = df2016.interpolate('linear', axis = 1)
+    df2016 = df2016.interpolate('linear', axis = 1)
 
-# join
-df_join = df7590.join(df9000.iloc[:,1:])
-df_join = df_join.join(df0015.iloc[:,1:])
-df_join['P2016'] = df2016['P2016']
-df_join['ID_HDC_G0'] = ghs['ID_HDC_G0']
+    # join
+    df_join = df7590.join(df9000.iloc[:,1:])
+    df_join = df_join.join(df0015.iloc[:,1:])
+    df_join['P2016'] = df2016['P2016']
+    df_join['ID_HDC_G0'] = ghs['ID_HDC_G0']
 
-# Save it out 
-df_join.to_csv(out_fn)
+    # Save it out 
+    df_join.to_csv(out_fn)

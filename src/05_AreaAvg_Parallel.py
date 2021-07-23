@@ -147,10 +147,10 @@ if __name__ == "__main__":
     print(dir_list)
 
     # set number of cores to use
-#     cpu_num = 20 
+    cpus = 20 
 
-#     # Execute code
+    # Execute code
     print('STARTING LOOP')
-    parallel_loop(temp_ghs, dir_list, 1)
+    parallel_loop(temp_ghs, dir_list, cpu_num = cpus)
     print(DATA_OUT)
     print('ENDING LOOP')
