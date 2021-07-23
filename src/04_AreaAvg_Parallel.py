@@ -140,17 +140,17 @@ def parallel_loop(function, dir_list, cpu_num):
 if __name__ == "__main__":
     # Get dir list
     dir_list = sorted(glob(DATA_IN+'*/'))
-    print(dir_list)
+    #print(dir_list)
 
     # For ERA5 Dir 
-    dir_list = dir_list[:-1]
+    dir_list = dir_list[33:]
     print(dir_list)
 
     # set number of cores to use
-    cpu_num = 20 
+#     cpu_num = 20 
 
-    # Execute code
+#     # Execute code
     print('STARTING LOOP')
-    parallel_loop(temp_ghs, dir_list, 20)
+    parallel_loop(temp_ghs, dir_list, 1)
     print(DATA_OUT)
     print('ENDING LOOP')
