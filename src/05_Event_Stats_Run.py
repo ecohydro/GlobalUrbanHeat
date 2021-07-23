@@ -20,15 +20,15 @@ import os
 from glob import glob
 
 # Arges Needed 
-DATA_IN = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/WBGT/' # <---- ALWAYS CHECK
-DATA_OUT = '/home/cascade/projects/UrbanHeat/data/interim/CHIRTS_DAILY/STATS/'
+DATA_IN = os.path.join('/scratch/cascade/UEH-daily/wbgtmax/') # <---- ALWAYS CHECK
+DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/stats/')
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
-Tthresh = 32 # <---------- ALWAYS CHECK
-data = 'WBGT32' #'HI406' # HI461 or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
+Tthresh = 30# <---------- ALWAYS CHECK
+data = 'wbgtmax'+str(Tthresh) #'HI406' # HI461 or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
 cpu = 20 # number of cpus to use
-fn_out = '/home/cascade/projects/UrbanHeat/data/processed/PNAS-DATA-v2/'+data+'_1D_STATS.json'# final FN 
+fn_out = os.path.join(DATA_OUT,data+'_STATS.json') # final FN 
 
 # Step 1 - Read and stack HI or WBGT
 ####################################################################################################

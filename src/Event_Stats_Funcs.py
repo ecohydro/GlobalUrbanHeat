@@ -44,7 +44,7 @@ def read_data(dir_path, space_dim, time_dim):
     # Open all Tmax files and concat into a df
     for i, fn in enumerate(fn_list):    
         # Open the CSV
-        df = pd.read_csv(fn)
+        df = pd.read_csv(os.path.join(fn))
 
         # Get the city ids 
         if i == 1:
