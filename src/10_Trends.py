@@ -61,15 +61,21 @@ if __name__ == "__main__":
     ## All data
     fn_out = os.path.join(DATA_PATH, DATA+'_TREND_ALL.json')
     stats_out_final.to_json(fn_out, orient = 'split')
+    print('Num all', len(stats_out_final))
 
     ## City-level where pdays is sig at < 0.05
-    p95 = stats_out_final[stats_out_final['p_value_pdays'] < 0.05]
+    # drop all neg slope cities
+    neg = stats_out_final[stats_out_final['coef_pdays'] <= 0])
+    print('Num neg cities', len(neg))
+    
+    ## City-level where pdays is sig at < 0.05  & pdays > 0
+    p95 = stats_out_final[(stats_out_final['p_value_pdays'] < 0.05) & (stats_out_final['coef_pdays'] > 0])]
     fn_out = os.path.join(DATA_PATH, DATA+'_TREND_PDAYS05.json')
     p95.to_json(fn_out, orient = 'split')
+    print('Num pdays 0.05', len(p95))
 
     ## City-level where total days is sig at < 0.05
-    p95 = stats_out_final[stats_out_final['p_value_totDays'] < 0.05]
+    p95 = stats_out_final[(stats_out_final['p_value_totDays']) < 0.05 & (stats_out_final['coef_pdays'] > 0])]
     fn_out = os.path.join(DATA_PATH, DATA+'_TREND_HEATP05.json')
     p95.to_json(fn_out, orient = 'split')
-
-
+    print('Num heat 0.05', len(p95))
