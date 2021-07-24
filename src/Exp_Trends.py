@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 import statsmodels.api as sm
+import warnings
 
 #### Functions
 def tot_days(df):
@@ -93,8 +94,8 @@ def add_years(df):
                 row.append(year)
                 row.append(0) # tot_days = 0 days
                 row.append(np.nan) # population for that year is not needed
-                row.append(df[(df['ID_HDC_G0'] == city)]['P1983'].values[0])
-                row.append(df[(df['ID_HDC_G0'] == city)]['P1983'].values[0])
+                row.append(df[(df['ID_HDC_G0'] == city)]['P1983'].values[0]) # P 1983 should be 0
+                row.append(df[(df['ID_HDC_G0'] == city)]['P2016'].values[0]) # P 2016 
                 row.append(0) # people_days = 0 days
                 row.append(0) # people_days_heat = 0 days
                 row.append(0) # people_days_pop = 0 days
@@ -105,7 +106,8 @@ def add_years(df):
 
     df_new = df.append(df_new) # add the rows back to the original data frame
 
-    # Drop any city with zero people in 1983
+    # Drop any city with zero people in 1983 because it will screw up the OLS, plus we don't want cities that didn't exist
+    # in the record 
     df_new = df_new[df_new['P1983'] > 0]
 
     return df_new
@@ -121,6 +123,9 @@ def OLS(df, geog, col, alpha):
     NOTE 2020.03.01 - Later in the day this issue is resolved by removing the offending cities. See comments
     in code. CPT
     
+    NOTE 2021.07.23 - Fixed RuntimeWarnings. Needed to deal with p value out puts and add warnings. 
+    See addition of filterwarnings below.
+    
     
     Args:
         df = HI stats dataframe
@@ -132,12 +137,14 @@ def OLS(df, geog, col, alpha):
     # Get results
     labels = []
     coef_list = []
-    leftci_list = []
-    rightci_list = []
     p_list = []
     df_out = pd.DataFrame()
+    
+    # turn warnings on
+    warnings.filterwarnings("error")
 
     for label, df_geog in df.groupby(geog):
+        #print(label)
 
         # Get Data
         X_year = np.array(df_geog.groupby('year')['ID_HDC_G0'].mean().index).reshape((-1, 1))
@@ -147,7 +154,10 @@ def OLS(df, geog, col, alpha):
         X_year_2 = sm.add_constant(X_year)
 
         # Regress
-        model = sm.OLS(Y_stats, X_year_2).fit() 
+        try:
+            model = sm.OLS(Y_stats, X_year_2).fit()
+        except RuntimeWarning:
+            break
         
         # Get slope
         # first param in intercept coef, second is slope of line but if slope = 0, then intecept
@@ -157,8 +167,12 @@ def OLS(df, geog, col, alpha):
         else:
             coef = model.params[0]
         
-        # P value
-        p = model.pvalues[0]
+        #P value - added cpt July 2021
+        # deal with zero slope models
+        if (model.params[0] == 0) & (model.params[1] == 0):
+            p = np.nan
+        else:
+            p = model.pvalues[0]
 
         # Make lists
         labels.append(label)
@@ -198,23 +212,28 @@ def run_OLS(stats, geog, alpha):
         alpha = alpha for CI coef   
     """
     # Get coef for people days
+    print('pdays ols')
     out = OLS(stats, geog, 'people_days', alpha = alpha)
     out.rename(columns={"coef": "coef_pdays"}, inplace = True)
     out.rename(columns={"p_value": "p_value_pdays"}, inplace = True)
     
     # Get people days due to heat coef
+    print('heat ols')
     heat = OLS(stats, geog, 'people_days_heat', alpha = alpha) # get stats 
     heat.rename(columns={"coef": "coef_heat"}, inplace = True)
     heat.rename(columns={"p_value": "p_value_heat"}, inplace = True)
     out = out.merge(heat, on = geog, how = 'left') # merge
     
     # Get people days due to pop
+    # CPT July 2021 ---- this throws an error 
+    print('pop ols')
     pop = OLS(stats, geog, 'people_days_pop', alpha = alpha) # get stats 
     pop.rename(columns={"coef": "coef_pop"}, inplace = True)
     pop.rename(columns={"p_value": "p_value_pop"}, inplace = True)
     out = out.merge(pop, on = geog, how = 'left') # merge
     
     # Get total days
+    print('tot days ols')
     totDays = OLS(stats, geog, 'tot_days', alpha = alpha) # get stats 
     totDays.rename(columns={"coef": "coef_totDays"}, inplace = True)
     totDays.rename(columns={"p_value": "p_value_totDays"}, inplace = True)
@@ -223,10 +242,10 @@ def run_OLS(stats, geog, alpha):
     # attrib coef --- creates range -1 to 1 index of heat vs. population as a driver of total pdays increase
     out['coef_attrib'] = (out['coef_pop'] - out['coef_heat']) / (out['coef_pop'] + out['coef_heat']) # normalize dif
     
-    # drop all neg or zero pday slopes (e.g. cooling cities)
-    out = out[out['coef_pdays'] > 0]
-    out = out[out['coef_heat'] > 0]
-    out = out[out['coef_pop'] > 0]
+#     # drop all neg or zero pday slopes (e.g. cooling cities)
+#     out = out[out['coef_pdays'] >= 0]
+#     out = out[out['coef_heat'] >= 0]
+#     out = out[out['coef_pop'] >= 0]
     
     # normalize coef of attribution 
     norm = out['coef_attrib']

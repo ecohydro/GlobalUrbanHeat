@@ -49,7 +49,8 @@ def hi_loop(year):
     rh_fns = sorted(glob.glob(rh_path+'/*.tif'))
     tmax_fns = sorted(glob.glob(tmax_path+'/*.tif'))
     zipped_list = list(zip(rh_fns,tmax_fns))
-    zipped_list = zipped_list[:3]# test
+    
+    # zipped_list = zipped_list[:3]# test
     
     for fns in zipped_list:
         # get date
@@ -101,7 +102,8 @@ if __name__ == "__main__":
     
     # Make years 
     year_list = list(range(1983,2016+1))
-    year_list = year_list[:3]# test
+    
+    #year_list = year_list[:3]# test
 
     # Run it
     parallel_loop(function = hi_loop, start_list = year_list, cpu_num = 20)
