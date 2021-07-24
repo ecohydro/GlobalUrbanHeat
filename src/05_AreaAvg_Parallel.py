@@ -34,15 +34,13 @@ from multiprocessing import Pool
 
 
 # DATA IN/OUT ----- ALWAYS UPDATE 
-DATA_IN = os.path.join('/scratch/cascade/UEH-daily/wbgtmax/')
-DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/GHS-wbgtmax/')# Updated path for organization 2021.02.01 CPT
+DATA_IN = os.path.join('/scratch/cascade/UEH-daily/himax/')
+DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/GHS-himax/')# Updated path for organization 2021.02.01 CPT
+DATA = 'himax.' #
+FN_OUT = 'GHS-himax' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
 
 # Always use keep the same 
 DATA_INTERIM = os.path.join('/home/cascade/projects/UrbanHeat/data/interim/') 
-
-# DATA: This is the data we are using, as string ---<<<<< ALWAYS UPDATE CPT 2020.03.25
-DATA = 'wbgtmax.' #
-FN_OUT = 'GHS-wbgtmax' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):
@@ -143,7 +141,7 @@ if __name__ == "__main__":
     #print(dir_list)
 
     # For ERA5 Dir 
-    dir_list = dir_list[33:]
+    # dir_list = dir_list[33:] #test
     print(dir_list)
 
     # set number of cores to use
