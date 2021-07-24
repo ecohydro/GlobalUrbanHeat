@@ -75,7 +75,7 @@ if __name__ == "__main__":
     print('Num pdays 0.05', len(p95))
 
     ## City-level where total days is sig at < 0.05
-    p95 = stats_out_final[(stats_out_final['p_value_totDays']) < 0.05 & (stats_out_final['coef_pdays'] > 0)]
+    p95 = stats_out_final[(stats_out_final['p_value_totDays'] < 0.05) & (stats_out_final['coef_pdays'] > 0)]
     fn_out = os.path.join(DATA_PATH, DATA+'_TREND_HEATP05.json')
     p95.to_json(fn_out, orient = 'split')
     print('Num heat 0.05', len(p95))
