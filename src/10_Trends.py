@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     ## City-level where pdays is sig at < 0.05
     # drop all neg slope cities
-    neg = stats_out_final[stats_out_final['coef_pdays'] <= 0])
+    neg = stats_out_final[stats_out_final['coef_pdays'] <= 0]
     print('Num neg cities', len(neg))
     
     ## City-level where pdays is sig at < 0.05  & pdays > 0
