@@ -240,6 +240,6 @@ def run_OLS(stats, geog, alpha):
     out = out.merge(totDays, on = geog, how = 'left') # merge
     
     # attrib coef --- creates range index of heat vs. population as a driver of total pdays increase
-    out['coef_attrib'] = (out['coef_pop'] / out['coef_pdays']  * 100) - 50 # center on zero as 50:50 
+    out['coef_attrib'] = (out['coef_pop'] / out['coef_pdays']  * 100) - 50 # center on zero so -100:100 heat:pop 
 
     return out
