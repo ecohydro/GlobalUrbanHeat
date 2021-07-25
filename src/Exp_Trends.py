@@ -240,12 +240,6 @@ def run_OLS(stats, geog, alpha):
     out = out.merge(totDays, on = geog, how = 'left') # merge
     
     # attrib coef --- creates range index of heat vs. population as a driver of total pdays increase
-    out['coef_attrib'] = (out['coef_pop'] - out['coef_heat']) / (out['coef_pop'] + out['coef_heat'])  
-
-    # normalize coef of attribution 0 to 1 
-    # this is not working I think due to a kernal error so in 11_coef_fix now cpt july 2021
-    # norm = out['coef_attrib']
-    # out['coef_attrib_norm'] = (norm-min(norm))/(max(norm)-min(norm))
-    out['coef_attrib_norm'] = 0
+    out['coef_attrib'] = (out['coef_pop'] / out['coef_pdays']  * 100) - 50 # center on zero as 50:50 
 
     return out
