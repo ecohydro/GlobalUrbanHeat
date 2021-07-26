@@ -20,13 +20,14 @@ import os
 from glob import glob
 
 # Arges Needed 
-DATA_IN = os.path.join('/scratch/cascade/UEH-daily/GHS-wbgtmax/') # <---- ALWAYS CHECK
+DATA_IN = os.path.join('/scratch/cascade/UEH-daily/GHS-himax/') # <---- ALWAYS CHECK
 DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/stats/')
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'
-Tthresh = 32# <---------- ALWAYS CHECK
-data = 'wbgtmax'+str(Tthresh) #'HI406' # HI461 or 32 & 28 WBGT and Threshold <---------- ALWAYS CHECK
+Tthresh = 46.1# <---------- ALWAYS CHECK
+Tthresh_str = '461'# <---------- ALWAYS CHECK
+data = 'himax'+Tthresh_str # <---------- ALWAYS CHECK
 cpu = 20 # number of cpus to use
 fn_out = os.path.join(DATA_OUT,data+'_STATS.json') # final FN 
 
