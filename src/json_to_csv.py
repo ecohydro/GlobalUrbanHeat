@@ -16,7 +16,7 @@ if __name__=="__main__":
     
     # json files
     data_path = os.path.join('/scratch/cascade/UEH-daily/stats/') # file path
-    fns = glob.glob(data_path+'himax406_2d*.json')
+    fns = glob.glob(data_path+'*.json')
     
     # write to csvs
     for fn in fns:
