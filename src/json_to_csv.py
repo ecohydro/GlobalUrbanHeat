@@ -16,10 +16,12 @@ if __name__=="__main__":
     
     # json files
     data_path = os.path.join('/scratch/cascade/UEH-daily/stats/') # file path
-    fns = glob.glob(data_path+'*.json')
+    fns = glob.glob(data_path+'himax406_2d*.json')
     
     # write to csvs
     for fn in fns:
         fn_tail = fn.split(data_path)[1].split('.json')[0] + '.csv' # change to csv
         df = pd.read_json(fn, orient = 'split') # open it
         df.to_csv(os.path.join(data_path,fn_tail))
+        print(fn_tail)
+    print('done!')

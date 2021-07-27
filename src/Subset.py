@@ -5,6 +5,8 @@
 #   Subset any result from Stats_parallel to identify events duration of greater 
 #   than a specific length.
 #
+#   Will need to re-run 08 and 09 steps for trends
+#
 #################################################################################
 
 # Dependencies
@@ -28,11 +30,12 @@ def subset(fn_in, fn_out, event_length):
     print(df_out.head(), 'done')
 
 # Args
-DATA_PATH = '/home/cascade/projects/UrbanHeat/data/'
-fn_in = os.path.join(DATA_PATH,'processed/PNAS-DATA-v2/HI406_1D_STATS.json') # ALWAYS UPDATE
-fn_out = os.path.join(DATA_PATH,'processed/PNAS-DATA-v2/HI406_2D_STATS.json') # ALWAYS UPDATE
+DATA_PATH = '/scratch/cascade/UEH-daily/stats/'
+fn_in = os.path.join(DATA_PATH,'himax406_STATS.json') # ALWAYS UPDATE
+fn_out = os.path.join(DATA_PATH,'himax406_2d_STATS.json') # ALWAYS UPDATE
 event_length = 2 # great than or equalt to 
 
 # Run it
 if __name__ == "__main__":
+    
     subset(fn_in, fn_out, event_length)
