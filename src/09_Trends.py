@@ -19,8 +19,8 @@ import Exp_Trends as expT
 import os
 
 #### PATH & FN 
-DATA_PATH = '/scratch/cascade/UEH-daily/stats/' 
-DATA = 'himax406_2d' # <---- AlWAYS UPDATA (str for data out) ------------- WBGT32_1D, WBGT28_1D, HI406_2D, HI461_1D
+DATA_PATH = '/home/cascade/CHIRTS/UEH-daily/stats/' # ALWAYS CHECK
+DATA = 'himax406_2d' # <---- AlWAYS UPDATA (str for data out) ------------- wbgtmax ... himax ... 
 FN_IN = os.path.join(DATA_PATH,DATA+'_EXP.json') # <---- ALWAYS CHECK
 
 if __name__ == "__main__":

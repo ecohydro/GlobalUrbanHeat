@@ -19,7 +19,7 @@ import os
 
 #### Args
 DATA = 'himax406_2d' # Always update WBGT32_1D, WBGT28_1D, HI406_1D HI406_2D & HI461_1D 
-DATA_PATH = os.path.join('/scratch/cascade/UEH-daily/stats/')
+DATA_PATH = os.path.join('/home/cascade/CHIRTS/UEH-daily/stats/')
 FN_POP = os.path.join('/home/cascade/projects/UrbanHeat/data/interim/GHS-UCDB-Interp.csv')
 FN_STATS = os.path.join(DATA_PATH, DATA+'_STATS.json')
 FN_OUT = os.path.join(DATA_PATH, DATA+'_EXP.json') 

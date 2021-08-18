@@ -239,7 +239,16 @@ def run_OLS(stats, geog, alpha):
     totDays.rename(columns={"p_value": "p_value_totDays"}, inplace = True)
     out = out.merge(totDays, on = geog, how = 'left') # merge
     
-    # attrib coef --- creates range index of heat vs. population as a driver of total pdays increase
-    out['coef_attrib'] = (out['coef_pop'] / out['coef_pdays']  * 100) - 50 # center on zero so -100:100 heat:pop 
-
+    # drop all neg or zero pday slopes (e.g. cooling cities)
+    out = out[out['coef_pdays'] > 0]
+    out = out[out['coef_heat'] > 0]
+    out = out[out['coef_pop'] > 0]
+    
+    # attrib coef --- creates range -1 to 1 index of heat vs. population as a driver of total pdays increase
+    out['coef_attrib'] = (out['coef_pop'] - out['coef_heat']) / (out['coef_pop'] + out['coef_heat']) 
+    
+    # normalize coef of attribution 
+    norm = out['coef_attrib']
+    out['coef_attrib_norm'] = (norm-min(norm))/(max(norm)-min(norm))
+    
     return out
