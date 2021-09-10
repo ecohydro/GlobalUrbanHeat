@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-# GlobalUrbanHeat
-Repository for Tuholske et al. (2021). "Global Urban Extreme Heat Exposure" &amp; Global High Resolution Daily Urban Extreme Heat Exposure (UEH-Daily) 1983 - 2016 dataset
-=======
-# UrbanHeat
-Code to map the TMax of 13,000 cities on the planet from 1983 - 2016. <br>
-By Cascade Tuholske, Feb 2021 (cascade at ucsb dot edu)
+# Global High Resolution Daily Urban Extreme Heat Exposure (UEH-Daily) 1983 - 2016 dataset <br>
+By Cascade Tuholske, Feb 2021 (cascade at ciesin dot columbia dot edu) <br>
+Repository for Tuholske, C., K. Caylor, C. Funk, A. Verdin, S. Sweeney, K. Grace, P. Peterson, and T. Evans. (In press). Global Urban Population Exposure to Extreme Heat. *Proceedings of the National Academy of Sciences*. <br>
 
-**STEPS are IN SRC**
-1. Make a conda env with requirements.txt (Python3)
-2. It is recommended to use a machine with at least 20 cores that can be run in parallel.
-3. CHIRTS-daily and RH is from UCSB CHC Ftp
-4. Global Human Settlement Layer Urban Center Data base is (here)[https://ghsl.jrc.ec.europa.eu/ucdb2018Overview.php] t
+Dataset: https://www.ciesin.columbia.edu/data/global-ueh-daily/
 
->>>>>>> deploy
+Data Reference: Tuholske, C., K. Caylor, C. Funk, A. Verdin, S. Sweeney, K. Grace, P. Peterson, and T. Evans. 2021. Global High Resolution Daily Urban Extreme Heat Exposure (UEH-Daily) 1983 - 2016. https://doi.org/10.7927/fq7g-ny13. Accessed DAY MONTH YEAR.
+
+**Steps are in SRC Folder and Figures 1, 3, and 4, as well as SI and compuations are in Notebooks**
