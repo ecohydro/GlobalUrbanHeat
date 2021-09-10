@@ -6,4 +6,6 @@ Dataset: https://www.ciesin.columbia.edu/data/global-ueh-daily/
 
 Data Reference: Tuholske, C., K. Caylor, C. Funk, A. Verdin, S. Sweeney, K. Grace, P. Peterson, and T. Evans. 2021. Global High Resolution Daily Urban Extreme Heat Exposure (UEH-Daily) 1983 - 2016. https://doi.org/10.7927/fq7g-ny13. Accessed DAY MONTH YEAR.
 
-**Steps are in SRC Folder and Figures 1, 3, and 4, as well as SI and compuations are in Notebooks**
+- To run, use the .py files in SRC explained in the README.txt. 
+- Figures 1, 3, and 4, as well as SI figures and computations are in Notebooks.
+- All maps were rendered in QGIS. 
