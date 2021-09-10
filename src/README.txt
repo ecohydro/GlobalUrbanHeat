@@ -20,4 +20,4 @@ To Run
 1. Geo Conda Env needs to activated (see requirements.ylm).  
 2. For fast processing, requires a computer than can run at least 20 cores in parallel.  
 3. Make sure all file paths in each script have been updated to your machine. 
-4. Run each .py  script to build the dataset.
+4. Run each .py script 01_* to 09_ to build the dataset.
