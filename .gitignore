@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+<<<<<<< HEAD
+=======
+# Visual Studio configs
+.vscode/
+
+>>>>>>> deploy
 # C extensions
 *.so
 
@@ -20,8 +26,11 @@ parts/
 sdist/
 var/
 wheels/
+<<<<<<< HEAD
 pip-wheel-metadata/
 share/python-wheels/
+=======
+>>>>>>> deploy
 *.egg-info/
 .installed.cfg
 *.egg
@@ -40,14 +49,20 @@ pip-delete-this-directory.txt
 # Unit test / coverage reports
 htmlcov/
 .tox/
+<<<<<<< HEAD
 .nox/
+=======
+>>>>>>> deploy
 .coverage
 .coverage.*
 .cache
 nosetests.xml
 coverage.xml
 *.cover
+<<<<<<< HEAD
 *.py,cover
+=======
+>>>>>>> deploy
 .hypothesis/
 .pytest_cache/
 
@@ -59,7 +74,10 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+<<<<<<< HEAD
 db.sqlite3-journal
+=======
+>>>>>>> deploy
 
 # Flask stuff:
 instance/
@@ -77,6 +95,7 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+<<<<<<< HEAD
 # IPython
 profile_default/
 ipython_config.py
@@ -97,6 +116,13 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
+=======
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+>>>>>>> deploy
 
 # SageMath parsed files
 *.sage.py
@@ -122,8 +148,29 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 .dmypy.json
 dmypy.json
 
 # Pyre type checker
 .pyre/
+=======
+
+# Mac OS-specific storage files
+.DS_Store
+
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+
+# exclude data from source control by default
+/Data/
+/data/
+/figures/
+
+# Ignore file types that may be too big for git
+*.tif
+
+# Other Stuff
+*.swp
+*.out
+>>>>>>> deploy
