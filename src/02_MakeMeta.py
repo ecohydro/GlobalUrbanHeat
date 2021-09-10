@@ -23,7 +23,7 @@ import numpy as np
 import geopandas as gpd
 
 # Load Files
-DATA_PATH= '/home/cascade/projects/UrbanHeat/data/'
+DATA_PATH= ''
 
 # Get GHS-UCDB Columns we want to use 
 ghs_fn = DATA_PATH+'raw/GHS_UCDB/GHS_STAT_UCDB2015MT_GLOBE_R2019A_V1_0.shp'

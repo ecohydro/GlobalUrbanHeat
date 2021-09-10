@@ -47,8 +47,8 @@ def wbgt_loop(year):
     print(mp.current_process(), year)
     
     # Set up file paths
-    hi_path = os.path.join('/scratch/cascade/UEH-daily/himax/', str(year)) # hi path
-    out_path = os.path.join('/scratch/cascade/UEH-daily/wbgtmax/', str(year))# wbgt path
+    hi_path = os.path.join('', str(year)) # hi path
+    out_path = os.path.join('', str(year))# wbgt path
                             
     # make dir to write 
     cmd = 'mkdir '+out_path

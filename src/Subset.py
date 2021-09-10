@@ -30,7 +30,7 @@ def subset(fn_in, fn_out, event_length):
     print(df_out.head(), 'done')
 
 # Args
-DATA_PATH = '/home/cascade/CHIRTS/UEH-daily/stats/'
+DATA_PATH = ''
 fn_in = os.path.join(DATA_PATH,'himax406_STATS.json') # ALWAYS UPDATE
 fn_out = os.path.join(DATA_PATH,'himax406_2d_STATS.json') # ALWAYS UPDATE
 event_length = 2 # great than or equalt to 

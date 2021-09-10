@@ -34,13 +34,13 @@ from multiprocessing import Pool
 
 
 # DATA IN/OUT ----- ALWAYS UPDATE 
-DATA_IN = os.path.join('/scratch/cascade/UEH-daily/himax/')
-DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/GHS-himax/')# Updated path for organization 2021.02.01 CPT
+DATA_IN = os.path.join('')
+DATA_OUT = os.path.join('')# Updated path for organization 2021.02.01 CPT
 DATA = 'himax.' #
 FN_OUT = 'GHS-himax' #Tmax' # updated 2021.02.01 to remove ERA5 from FN ... it's CHIRTS-daily made with ERA5 
 
 # Always use keep the same 
-DATA_INTERIM = os.path.join('/home/cascade/projects/UrbanHeat/data/interim/') 
+DATA_INTERIM = os.path.join('') 
 
 # Loop through dirs in //
 def temp_ghs(dir_nm):

@@ -20,8 +20,8 @@ import os
 from glob import glob
 
 # Arges Needed 
-DATA_IN = os.path.join('/scratch/cascade/UEH-daily/GHS-himax/') # <---- ALWAYS CHECK
-DATA_OUT = os.path.join('/scratch/cascade/UEH-daily/stats/')
+DATA_IN = os.path.join('') # <---- ALWAYS CHECK
+DATA_OUT = os.path.join('')
 dir_path = DATA_IN 
 space_dim = 'ID_HDC_G0'
 time_dim = 'date'

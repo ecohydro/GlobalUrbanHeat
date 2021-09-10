@@ -15,7 +15,7 @@ import glob
 if __name__=="__main__":
     
     # json files
-    data_path = os.path.join('/home/cascade/CHIRTS/UEH-daily/stats/') # file path
+    data_path = os.path.join('') # file path
     fns = glob.glob(data_path+'*.json')
     
     # write to csvs

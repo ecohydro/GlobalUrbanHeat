@@ -19,7 +19,7 @@ import Exp_Trends as expT
 import os
 
 #### PATH & FN 
-DATA_PATH = '/home/cascade/CHIRTS/UEH-daily/stats/' # ALWAYS CHECK
+DATA_PATH = '' # ALWAYS CHECK
 DATA = 'himax406_2d' # <---- AlWAYS UPDATA (str for data out) ------------- wbgtmax ... himax ... 
 FN_IN = os.path.join(DATA_PATH,DATA+'_EXP.json') # <---- ALWAYS CHECK
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     #### Add In Meta Data (e.g. geographic data)
     print('merge')
-    meta_fn = os.path.join('/home/cascade/projects/UrbanHeat/data/','interim/GHS-UCDB-IDS.csv')
+    meta_fn = os.path.join('','interim/GHS-UCDB-IDS.csv')
     meta_data = pd.read_csv(meta_fn)
 
     #### Merge in meta

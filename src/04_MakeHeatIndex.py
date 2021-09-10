@@ -29,16 +29,18 @@ import ClimFuncs
 #### Functions
 def hi_loop(year):
     
+    """ Function takes the year from a list and makes the pixel level HI from CHIRTS Tmax and RHmin using
+    ClimFuncs.py functions.
     """
-    """
+    
     print(multiprocessing.current_process(), year)
      
     # Set up file paths
     # RH min made with CHIRTS-daily Tmax
-    rh_path = os.path.join('/home/CHIRTS/daily_ERA5/w-ERA5_Td.eq2-2-spechum-Tmax/', str(year)) 
+    rh_path = os.path.join('','/w-ERA5_Td.eq2-2-spechum-Tmax/', str(year)) 
     # CHIRTS-daily tmax 
-    tmax_path = os.path.join('/home/chc-data-out/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/', str(year)) 
-    out_path = os.path.join('/scratch/cascade/UEH-daily/himax/', str(year))
+    tmax_path = os.path.join('','CHIRTSdaily/v1.0/global_tifs_p05/Tmax/', str(year)) 
+    out_path = os.path.join('', str(year))
                             
     # make dir to write 
     cmd = 'mkdir '+out_path
